@@ -4,7 +4,7 @@ namespace LeadingSystems\Lsjs4c;
 use function LeadingSystems\Helpers\ls_getFilePathFromVariableSources;
 
 class lsjs4c_controller extends \Controller {
-	protected $str_folderUpPrefix = '_dup7_/';
+	protected $str_folderUpPrefix = '_dup4_/';
 
 	protected static $objInstance;
 
