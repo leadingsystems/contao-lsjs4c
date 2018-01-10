@@ -31,8 +31,8 @@ class lsjs4c_controller extends \Controller {
 		/*
 		 * Load the lsjs core
 		 */
-		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/ls_lsjs4c/pub/lsjs/core/appBinder/binder.php?output=js&includeAppModules=no&includeApp=no';
-		$GLOBALS['TL_CSS'][] = 'system/modules/ls_lsjs4c/pub/lsjs/core/appBinder/binder.php?output=css&includeAppModules=no&includeApp=no&includeMasterStyleFiles=no';
+		$GLOBALS['TL_JAVASCRIPT'][] = 'assets/lsjs/core/appBinder/binder.php?output=js&includeAppModules=no&includeApp=no';
+		$GLOBALS['TL_CSS'][] = 'assets/lsjs/core/appBinder/binder.php?output=css&includeAppModules=no&includeApp=no&includeMasterStyleFiles=no';
 
 		/*
 		 * Load the lsjs apps
@@ -40,8 +40,8 @@ class lsjs4c_controller extends \Controller {
 		foreach ($GLOBALS['lsjs4c_globals']['lsjs4c_appsToLoad'] as $str_appPath) {
 			$arr_hashesOfModulesToExclude = $this->getHashesOfModulesToExclude($str_appPath);
 
-			$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/ls_lsjs4c/pub/lsjs/core/appBinder/binder.php?output=js&pathToApp='.urldecode($this->str_folderUpPrefix.$str_appPath).'&includeCore=no&includeCoreModules=no'.(count($arr_hashesOfModulesToExclude) ? '&blacklist='.implode(',', $arr_hashesOfModulesToExclude) : '');
-			$GLOBALS['TL_CSS'][] = 'system/modules/ls_lsjs4c/pub/lsjs/core/appBinder/binder.php?output=css&pathToApp='.urldecode($this->str_folderUpPrefix.$str_appPath).'&includeCore=no&includeCoreModules=no'.(count($arr_hashesOfModulesToExclude) ? '&blacklist='.implode(',', $arr_hashesOfModulesToExclude) : '');
+			$GLOBALS['TL_JAVASCRIPT'][] = 'assets/lsjs/core/appBinder/binder.php?output=js&pathToApp='.urldecode($this->str_folderUpPrefix.$str_appPath).'&includeCore=no&includeCoreModules=no'.(count($arr_hashesOfModulesToExclude) ? '&blacklist='.implode(',', $arr_hashesOfModulesToExclude) : '');
+			$GLOBALS['TL_CSS'][] = 'assets/lsjs/core/appBinder/binder.php?output=css&pathToApp='.urldecode($this->str_folderUpPrefix.$str_appPath).'&includeCore=no&includeCoreModules=no'.(count($arr_hashesOfModulesToExclude) ? '&blacklist='.implode(',', $arr_hashesOfModulesToExclude) : '');
 		}
 	}
 
