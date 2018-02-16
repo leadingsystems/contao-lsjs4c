@@ -31,7 +31,7 @@ class lsjs4c_controller extends \Controller {
 		/*
 		 * Load the lsjs core
 		 */
-		$GLOBALS['TL_JAVASCRIPT'][] = 'assets/lsjs/core/appBinder/binder.php?output=js&includeAppModules=no&includeApp=no';
+		$GLOBALS['TL_JAVASCRIPT'][] = 'assets/lsjs/core/appBinder/binder.php?output=js&includeAppModules=no&includeApp=no'.($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '&debug=1' : '');
 		$GLOBALS['TL_CSS'][] = 'assets/lsjs/core/appBinder/binder.php?output=css&includeAppModules=no&includeApp=no&includeMasterStyleFiles=no';
 
 		/*
@@ -40,7 +40,7 @@ class lsjs4c_controller extends \Controller {
 		foreach ($GLOBALS['lsjs4c_globals']['lsjs4c_appsToLoad'] as $str_appPath) {
 			$arr_hashesOfModulesToExclude = $this->getHashesOfModulesToExclude($str_appPath);
 
-			$GLOBALS['TL_JAVASCRIPT'][] = 'assets/lsjs/core/appBinder/binder.php?output=js&pathToApp='.urldecode($this->str_folderUpPrefix.$str_appPath).'&includeCore=no&includeCoreModules=no'.(count($arr_hashesOfModulesToExclude) ? '&blacklist='.implode(',', $arr_hashesOfModulesToExclude) : '');
+			$GLOBALS['TL_JAVASCRIPT'][] = 'assets/lsjs/core/appBinder/binder.php?output=js&pathToApp='.urldecode($this->str_folderUpPrefix.$str_appPath).'&includeCore=no&includeCoreModules=no'.(count($arr_hashesOfModulesToExclude) ? '&blacklist='.implode(',', $arr_hashesOfModulesToExclude) : '').($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '&debug=1' : '');
 			$GLOBALS['TL_CSS'][] = 'assets/lsjs/core/appBinder/binder.php?output=css&pathToApp='.urldecode($this->str_folderUpPrefix.$str_appPath).'&includeCore=no&includeCoreModules=no'.(count($arr_hashesOfModulesToExclude) ? '&blacklist='.implode(',', $arr_hashesOfModulesToExclude) : '');
 		}
 	}
@@ -78,6 +78,8 @@ class lsjs4c_controller extends \Controller {
 			$arr_modulePaths[] = ls_getFilePathFromVariableSources($bin_uuid);
 		}
 		$GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExclude'] = $arr_modulePaths;
+
+		$GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] = $objLayout->lsjs4c_debugMode;
 	}
 
 }
