@@ -16,11 +16,11 @@ $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_appsToLoad'] = array(
 	'exclude' => true,
 	'inputType' => 'fileTree',
 	'eval' => array(
-		'multiple' => true,
+		'multiple' => false,
 		'tl_class'=>'clr',
 		'files' => false,
 		'filesOnly' => false,
-		'fieldType' => 'checkbox'
+		'fieldType' => 'radio'
 	)
 );
 
