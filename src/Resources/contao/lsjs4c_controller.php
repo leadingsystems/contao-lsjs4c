@@ -35,14 +35,14 @@ class lsjs4c_controller extends \Controller {
 
 		$GLOBALS['TL_JAVASCRIPT'][] =
 			'assets/lsjs/core/appBinder/binder.php?output=js&includeAppModules=no&includeApp=no'
-			.($str_coreCustomizationPath ? '&pathToAppCustomization='.urldecode($this->str_folderUpPrefix.$str_coreCustomizationPath) : '')
+			.($str_coreCustomizationPath ? '&pathToCoreCustomization='.urldecode($this->str_folderUpPrefix.$str_coreCustomizationPath) : '')
 			.($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '&debug=1' : '')
 			.($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '&no-cache=1' : '')
 			.($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '&no-minifier=1' : '');
 
 		$GLOBALS['TL_CSS'][] =
 			'assets/lsjs/core/appBinder/binder.php?output=css&includeAppModules=no&includeApp=no&includeMasterStyleFiles=no'
-			.($str_coreCustomizationPath ? '&pathToAppCustomization='.urldecode($this->str_folderUpPrefix.$str_coreCustomizationPath) : '')
+			.($str_coreCustomizationPath ? '&pathToCoreCustomization='.urldecode($this->str_folderUpPrefix.$str_coreCustomizationPath) : '')
 			.($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '&no-cache=1' : '')
 			.($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '&no-minifier=1' : '');
 
@@ -105,6 +105,10 @@ class lsjs4c_controller extends \Controller {
 		$GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExclude'] = $arr_modulePaths;
 
 		$GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] = $objLayout->lsjs4c_debugMode;
+
+		$GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] = $objLayout->lsjs4c_noCache;
+
+		$GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] = $objLayout->lsjs4c_noMinifier;
 	}
 
 }
