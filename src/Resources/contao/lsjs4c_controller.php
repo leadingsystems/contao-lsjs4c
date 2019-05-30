@@ -40,12 +40,14 @@ class lsjs4c_controller extends \Controller {
 			.($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '&no-cache=1' : '')
 			.($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '&no-minifier=1' : '');
 
-		$GLOBALS['TL_CSS'][] =
+		if (!isset($GLOBALS['lsjs4c_globals']['lsjs4c_doNotLoadCss']) || !$GLOBALS['lsjs4c_globals']['lsjs4c_doNotLoadCss']) {
+		    $GLOBALS['TL_CSS'][] =
 			'assets/lsjs/core/appBinder/binder.php?output=css&includeAppModules=no&includeApp=no&includeMasterStyleFiles=no'
-			.($str_coreCustomizationPath ? '&pathToCoreCustomization='.urldecode($this->str_folderUpPrefix.$str_coreCustomizationPath) : '')
-			.($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '&no-cache=1' : '')
-			.($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '&no-minifier=1' : '');
-
+			. ($str_coreCustomizationPath ? '&pathToCoreCustomization=' . urldecode($this->str_folderUpPrefix . $str_coreCustomizationPath) : '')
+			. ($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '&no-cache=1' : '')
+			. ($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '&no-minifier=1' : '');
+		}
+		
 		/*
 		 * Load the lsjs apps
 		 */
@@ -60,15 +62,17 @@ class lsjs4c_controller extends \Controller {
 			.(count($arr_hashesOfModulesToExclude) ? '&blacklist='.implode(',', $arr_hashesOfModulesToExclude) : '')
 			.($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '&debug=1' : '')
 			.($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '&no-cache=1' : '')
-			.($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '&no-minifier=1' : '');;
+			.($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '&no-minifier=1' : '');
 
-		$GLOBALS['TL_CSS'][] =
-			'assets/lsjs/core/appBinder/binder.php?output=css&pathToApp='.urldecode($this->str_folderUpPrefix.$str_appPath)
-			.'&includeCore=no&includeCoreModules=no'
-			.($str_appCustomizationPath ? '&pathToAppCustomization='.urldecode($this->str_folderUpPrefix.$str_appCustomizationPath) : '')
-			.(count($arr_hashesOfModulesToExclude) ? '&blacklist='.implode(',', $arr_hashesOfModulesToExclude) : '')
-			.($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '&no-cache=1' : '')
-			.($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '&no-minifier=1' : '');;
+		if (!isset($GLOBALS['lsjs4c_globals']['lsjs4c_doNotLoadCss']) || !$GLOBALS['lsjs4c_globals']['lsjs4c_doNotLoadCss']) {
+		    $GLOBALS['TL_CSS'][] =
+			'assets/lsjs/core/appBinder/binder.php?output=css&pathToApp=' . urldecode($this->str_folderUpPrefix . $str_appPath)
+			. '&includeCore=no&includeCoreModules=no'
+			. ($str_appCustomizationPath ? '&pathToAppCustomization=' . urldecode($this->str_folderUpPrefix . $str_appCustomizationPath) : '')
+			. (count($arr_hashesOfModulesToExclude) ? '&blacklist=' . implode(',', $arr_hashesOfModulesToExclude) : '')
+			. ($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '&no-cache=1' : '')
+			. ($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '&no-minifier=1' : '');
+		}
 	}
 
 	protected function getHashesOfModulesToExclude($str_appPath) {
