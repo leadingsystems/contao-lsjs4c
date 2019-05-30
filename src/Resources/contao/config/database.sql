@@ -1,5 +1,6 @@
 CREATE TABLE `tl_layout` (
 	`lsjs4c_loadLsjs` char(1) NOT NULL default '',
+	`lsjs4c_doNotLoadCss` char(1) NOT NULL default '',
 	`lsjs4c_appToLoad` blob NULL,
 	`lsjs4c_appCustomizationToLoad` blob NULL,
 	`lsjs4c_coreCustomizationToLoad` blob NULL,
