@@ -94,6 +94,8 @@ class lsjs4c_controller extends \Controller {
 
 	public function getLayoutSettingsForGlobalUse(\PageModel $objPage, \LayoutModel $objLayout, \PageRegular $objPageRegular) {
 		$GLOBALS['lsjs4c_globals']['lsjs4c_loadLsjs'] = $objLayout->lsjs4c_loadLsjs;
+		
+		$GLOBALS['lsjs4c_globals']['lsjs4c_doNotLoadCss'] = $objLayout->lsjs4c_doNotLoadCss;
 
 		$GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad'] = ls_getFilePathFromVariableSources($objLayout->lsjs4c_appToLoad);
 
