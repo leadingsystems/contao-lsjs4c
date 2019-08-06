@@ -97,4 +97,23 @@ class lsjs4c_controller extends \Controller {
 		$GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] = $objLayout->lsjs4c_noMinifier;
 	}
 
+
+
+    public static function getBackendLsjs($str_content, $str_template) {
+        if ($str_template !== 'be_main') {
+            return $str_content;
+        }
+
+        ob_start();
+        ?>
+        <script src="assets/lsjs/core/appBinder/binder.php?output=js&includeAppModules=no&includeApp=no"></script>
+        <?php
+        $obj_combiner = new \Combiner();
+        $obj_combiner->add('assets/lsjs/core/styles_core.less');
+        ?>
+        <link rel="stylesheet" href="<?php echo $obj_combiner->getCombinedFile(); ?>">
+        <?php
+
+        return str_replace('</head>', ob_get_clean()."\r\n</head>", $str_content);
+    }
 }
