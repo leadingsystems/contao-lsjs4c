@@ -3,7 +3,6 @@
 	 * Fields
 	 */
 	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_loadLsjs'] = array('Load LSJS javascript main component', 'Define whether you want to load the javascript main component of LSJS. This is necessary if you want to use LSJS apps in this layout.');
-	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_doNotLoadCss'] = array('Do not load LSJS stylesheets', 'Activate this option if the LSJS stylesheets should not be loaded. In this case you have to make sure in another way that all necessary stylesheets are included in your project.');
 	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_appToLoad'] = array('App to load', 'Choose the folder of the LSJS apps that you want to load.');
 	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_appCustomizationToLoad'] = array('App customization to load', 'Chose the folder of the app customization that you want to load. Please read the LSJS documentation for further information.');
 	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_coreCustomizationToLoad'] = array('Core customization to load', 'Chose the folder of the core customization that you want to load. Please read the LSJS documentation for further information.');

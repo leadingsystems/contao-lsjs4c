@@ -2,17 +2,10 @@
 
 namespace LeadingSystems\Lsjs4c;
 
-$GLOBALS['TL_DCA']['tl_layout']['palettes']['default'] .= ';{lsjs4c_legend},lsjs4c_loadLsjs,lsjs4c_doNotLoadCss,lsjs4c_appToLoad,lsjs4c_appCustomizationToLoad,lsjs4c_coreCustomizationToLoad,lsjs4c_modulesToExclude,lsjs4c_debugMode,lsjs4c_noCache,lsjs4c_noMinifier';
+$GLOBALS['TL_DCA']['tl_layout']['palettes']['default'] .= ';{lsjs4c_legend},lsjs4c_loadLsjs,lsjs4c_appToLoad,lsjs4c_appCustomizationToLoad,lsjs4c_coreCustomizationToLoad,lsjs4c_modulesToExclude,lsjs4c_debugMode,lsjs4c_noCache,lsjs4c_noMinifier';
 
 $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_loadLsjs'] = array(
 	'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_loadLsjs'],
-	'exclude'                 => true,
-	'inputType'               => 'checkbox',
-	'eval'                    => array('tl_class'=>'m12')
-);
-
-$GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_doNotLoadCss'] = array(
-	'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_doNotLoadCss'],
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'m12')
