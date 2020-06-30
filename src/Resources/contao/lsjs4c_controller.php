@@ -108,12 +108,6 @@ class lsjs4c_controller extends \Controller {
         ?>
         <script src="assets/lsjs/core/appBinder/binder.php?output=js&includeAppModules=no&includeApp=no"></script>
         <?php
-        $obj_combiner = new \Combiner();
-        $obj_combiner->add('assets/lsjs/core/styles_core.less');
-        ?>
-        <link rel="stylesheet" href="<?php echo $obj_combiner->getCombinedFile(); ?>">
-        <?php
-
         return str_replace('</head>', ob_get_clean()."\r\n</head>", $str_content);
     }
 }
