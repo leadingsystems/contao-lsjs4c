@@ -31,7 +31,8 @@
   "extra": {
     "contao-manager-plugin": "LeadingSystems\\LSJS4CBundle\\ContaoManager\\Plugin",
     "branch-alias": {
-      "dev-master": "2.0.x-dev"
+      "dev-master": "2.0.x-dev",
+      "dev-vfx_1": "2.0.x-dev"
     }
   }
 }
