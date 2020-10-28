@@ -12,7 +12,7 @@
     "php": ">=7.0.0",
     "contao/core-bundle": "~4.4",
     "leadingsystems/contao-helpers": ">=2.0.0",
-    "leadingsystems/lsjs": ">=2.0.6"
+    "leadingsystems/lsjs": "dev-vfx_1"
   },
   "autoload": {
     "psr-4": {
@@ -31,7 +31,6 @@
   "extra": {
     "contao-manager-plugin": "LeadingSystems\\LSJS4CBundle\\ContaoManager\\Plugin",
     "branch-alias": {
-      "dev-master": "2.0.x-dev",
       "dev-vfx_1": "2.0.x-dev"
     }
   }
