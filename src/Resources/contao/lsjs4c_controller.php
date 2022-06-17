@@ -31,7 +31,7 @@ class lsjs4c_controller extends \Controller {
 		/*
 		 * Load the lsjs core
 		 */
-		$str_coreCustomizationPath = is_array($GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad'];
+		$str_coreCustomizationPath = $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoadTextPath'] ?: is_array($GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad'];
 
 		$GLOBALS['TL_JAVASCRIPT'][] =
 			'assets/lsjs/core/appBinder/binder.php?output=js&includeAppModules=no&includeApp=no'
@@ -44,8 +44,8 @@ class lsjs4c_controller extends \Controller {
 		 * Load the lsjs apps
 		 */
 		$str_appPath = $GLOBALS['lsjs4c_globals']['lsjs4c_appToLoadTextPath'] ?: (is_array($GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad']);
-		$str_appCustomizationPath = is_array($GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad'];
-		$arr_hashesOfModulesToExclude = $this->getHashesOfModulesToExclude($str_appPath);
+		$str_appCustomizationPath = $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoadTextPath'] ?: is_array($GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad'];
+		$arr_hashesOfModulesToExclude = $this->getHashesOfModulesToExclude(count($GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExcludeTextPath']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExcludeTextPath'] : $GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExclude'], $str_appPath);
 
 		$GLOBALS['TL_JAVASCRIPT'][] =
 			'assets/lsjs/core/appBinder/binder.php?output=js&pathToApp='.urldecode($this->str_folderUpPrefix.$str_appPath)
@@ -57,7 +57,7 @@ class lsjs4c_controller extends \Controller {
 			.($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '&no-minifier=1' : '');
 	}
 
-	protected function getHashesOfModulesToExclude($str_appPath) {
+	protected function getHashesOfModulesToExclude($arr_modulesToExclude, $str_appPath) {
 		$arr_hashesOfModulesToExclude = array();
 		
 		/*
@@ -65,7 +65,7 @@ class lsjs4c_controller extends \Controller {
 		 * generate the module path hash that will then be used for the blacklist
 		 * parameter in the binder request
 		 */
-		foreach ($GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExclude'] as $str_modelPath) {
+		foreach ($arr_modulesToExclude as $str_modelPath) {
 			if (strpos($str_modelPath, $str_appPath.'/') === 0) {
 				$arr_hashesOfModulesToExclude[] = md5($this->replaceDirectoryUpAbbreviation($this->str_folderUpPrefix.$str_modelPath));
 			}
@@ -83,7 +83,11 @@ class lsjs4c_controller extends \Controller {
 
 		$GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad'] = ls_getFilePathFromVariableSources($objLayout->lsjs4c_appCustomizationToLoad);
 
+		$GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoadTextPath'] = $objLayout->lsjs4c_appCustomizationToLoadTextPath;
+
 		$GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad'] = ls_getFilePathFromVariableSources($objLayout->lsjs4c_coreCustomizationToLoad);
+
+		$GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoadTextPath'] = $objLayout->lsjs4c_coreCustomizationToLoadTextPath;
 
 		$arr_modulesToExclude = deserialize($objLayout->lsjs4c_modulesToExclude, true);
 		$arr_modulePaths = array();
@@ -91,6 +95,8 @@ class lsjs4c_controller extends \Controller {
 			$arr_modulePaths[] = ls_getFilePathFromVariableSources($bin_uuid);
 		}
 		$GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExclude'] = $arr_modulePaths;
+
+		$GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExcludeTextPath'] = empty(trim($objLayout->lsjs4c_modulesToExcludeTextPath)) ? [] : array_map('trim', explode(',', $objLayout->lsjs4c_modulesToExcludeTextPath));
 
 		$GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] = $objLayout->lsjs4c_debugMode;
 
