@@ -43,7 +43,7 @@ class lsjs4c_controller extends \Controller {
 		/*
 		 * Load the lsjs apps
 		 */
-		$str_appPath = is_array($GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad'];
+		$str_appPath = $GLOBALS['lsjs4c_globals']['lsjs4c_appToLoadTextPath'] ?: (is_array($GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad']);
 		$str_appCustomizationPath = is_array($GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad'];
 		$arr_hashesOfModulesToExclude = $this->getHashesOfModulesToExclude($str_appPath);
 
@@ -78,6 +78,8 @@ class lsjs4c_controller extends \Controller {
 		$GLOBALS['lsjs4c_globals']['lsjs4c_loadLsjs'] = $objLayout->lsjs4c_loadLsjs;
 		
 		$GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad'] = ls_getFilePathFromVariableSources($objLayout->lsjs4c_appToLoad);
+
+		$GLOBALS['lsjs4c_globals']['lsjs4c_appToLoadTextPath'] = $objLayout->lsjs4c_appToLoadTextPath;
 
 		$GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad'] = ls_getFilePathFromVariableSources($objLayout->lsjs4c_appCustomizationToLoad);
 

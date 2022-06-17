@@ -4,6 +4,7 @@
 	 */
 	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_loadLsjs'] = array('Load LSJS javascript main component', 'Define whether you want to load the javascript main component of LSJS. This is necessary if you want to use LSJS apps in this layout.');
 	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_appToLoad'] = array('App to load', 'Choose the folder of the LSJS apps that you want to load.');
+	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_appToLoadTextPath'] = array('App to load (free path specification)', 'If you want to load an LSJS app that is located outside the "files" directory of Contao, specify the path here.');
 	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_appCustomizationToLoad'] = array('App customization to load', 'Chose the folder of the app customization that you want to load. Please read the LSJS documentation for further information.');
 	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_coreCustomizationToLoad'] = array('Core customization to load', 'Chose the folder of the core customization that you want to load. Please read the LSJS documentation for further information.');
 	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_modulesToExclude'] = array('Modules to exclude', 'Choose the folders of the modules that you want to exclude.');

@@ -2,7 +2,7 @@
 
 namespace LeadingSystems\Lsjs4c;
 
-$GLOBALS['TL_DCA']['tl_layout']['palettes']['default'] .= ';{lsjs4c_legend},lsjs4c_loadLsjs,lsjs4c_appToLoad,lsjs4c_appCustomizationToLoad,lsjs4c_coreCustomizationToLoad,lsjs4c_modulesToExclude,lsjs4c_debugMode,lsjs4c_noCache,lsjs4c_noMinifier';
+$GLOBALS['TL_DCA']['tl_layout']['palettes']['default'] .= ';{lsjs4c_legend},lsjs4c_loadLsjs,lsjs4c_appToLoad,lsjs4c_appToLoadTextPath,lsjs4c_appCustomizationToLoad,lsjs4c_coreCustomizationToLoad,lsjs4c_modulesToExclude,lsjs4c_debugMode,lsjs4c_noCache,lsjs4c_noMinifier';
 
 $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_loadLsjs'] = array(
 	'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_loadLsjs'],
@@ -17,10 +17,19 @@ $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_appToLoad'] = array(
 	'inputType' => 'fileTree',
 	'eval' => array(
 		'multiple' => false,
-		'tl_class'=>'clr',
+		'tl_class'=>'w50',
 		'files' => false,
 		'filesOnly' => false,
 		'fieldType' => 'radio'
+	)
+);
+
+$GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_appToLoadTextPath'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_appToLoadTextPath'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array(
+		'tl_class'=>'w50'
 	)
 );
 
