@@ -67,7 +67,7 @@ class lsjs4c_controller extends \Controller {
 		 */
 		foreach ($GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExclude'] as $str_modelPath) {
 			if (strpos($str_modelPath, $str_appPath.'/') === 0) {
-				$arr_hashesOfModulesToExclude[] = md5($this->str_folderUpPrefix.$str_modelPath);
+				$arr_hashesOfModulesToExclude[] = md5($this->replaceDirectoryUpAbbreviation($this->str_folderUpPrefix.$str_modelPath));
 			}
 		}
 		
@@ -109,5 +109,23 @@ class lsjs4c_controller extends \Controller {
         <script src="assets/lsjs/core/appBinder/binder.php?output=js&includeAppModules=no&includeApp=no"></script>
         <?php
         return str_replace('</head>', ob_get_clean()."\r\n</head>", $str_content);
+    }
+
+    protected function replaceDirectoryUpAbbreviation($str_url) {
+        $str_url = preg_replace_callback(
+            '/_dup([0-9]+?)_/',
+            function($arr_matches) {
+                $arr_dirUp = array();
+                for ($i = 1; $i <= $arr_matches[1]; $i++) {
+                    $arr_dirUp[] = '..';
+                }
+                $str_dirUpPrefix = implode('/', $arr_dirUp);
+
+                return $str_dirUpPrefix;
+            },
+            $str_url
+        );
+
+        return $str_url;
     }
 }
