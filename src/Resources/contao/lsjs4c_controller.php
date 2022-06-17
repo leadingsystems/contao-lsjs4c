@@ -31,7 +31,7 @@ class lsjs4c_controller extends \Controller {
 		/*
 		 * Load the lsjs core
 		 */
-		$str_coreCustomizationPath = $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoadTextPath'] ?: is_array($GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad'];
+		$str_coreCustomizationPath = $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoadTextPath'] ?: (is_array($GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad']);
 
 		$GLOBALS['TL_JAVASCRIPT'][] =
 			'assets/lsjs/core/appBinder/binder.php?output=js&includeAppModules=no&includeApp=no'
@@ -44,7 +44,7 @@ class lsjs4c_controller extends \Controller {
 		 * Load the lsjs apps
 		 */
 		$str_appPath = $GLOBALS['lsjs4c_globals']['lsjs4c_appToLoadTextPath'] ?: (is_array($GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad']);
-		$str_appCustomizationPath = $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoadTextPath'] ?: is_array($GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad'];
+		$str_appCustomizationPath = $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoadTextPath'] ?: (is_array($GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad']);
 		$arr_hashesOfModulesToExclude = $this->getHashesOfModulesToExclude(count($GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExcludeTextPath']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExcludeTextPath'] : $GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExclude'], $str_appPath);
 
 		$GLOBALS['TL_JAVASCRIPT'][] =
