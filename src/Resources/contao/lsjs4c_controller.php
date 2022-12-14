@@ -12,7 +12,7 @@ class lsjs4c_controller extends \Controller {
 		parent::__construct();
 	}
 
-	final private function __clone() {
+	private function __clone() {
 		
 	}
 
