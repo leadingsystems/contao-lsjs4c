@@ -122,11 +122,11 @@ $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_noMinifier'] = array(
 	'eval'                    => array('tl_class'=>'m12')
 );
 
-
+use Contao\System;
 class tl_layout_controller extends \Backend {
     public function handleCache($dc) {
         if ($dc->activeRecord->lsjs4c_noCache) {
-            $arr_files = glob(TL_ROOT . '/assets/lsjs/cache/*');
+            $arr_files = glob(System::getContainer()->getParameter('kernel.project_dir') . '/assets/lsjs/cache/*');
             foreach($arr_files as $str_filePath){
                 if(is_file($str_filePath)) {
                     unlink($str_filePath);
