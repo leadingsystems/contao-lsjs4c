@@ -1,6 +1,11 @@
 <?php
 
-class lsjs_templateConverter {
+namespace LeadingSystems\Lsjs4c;
+
+use Exception;
+
+
+class templateConverter {
 	protected $str_moduleName = '';
 	protected $arr_templateFiles = array();
 	protected $str_pathToTemplateBasisFile = '';
@@ -155,6 +160,7 @@ class lsjs_templateConverter {
 		preg_match($this->str_patternForSingleTemplatePartInBasisFile, $this->str_jsOutput, $arr_matches);
 		$str_partForSingleTemplate = $arr_matches[0];
 		
+
 		$str_wholeTemplatePart = '';
 		foreach($this->arr_templatesContent as $str_templateName => $str_templateContent) {
 			$str_templateContent = preg_replace('/__templateCode__/', $str_templateContent, $str_partForSingleTemplate);
@@ -164,8 +170,8 @@ class lsjs_templateConverter {
 			$str_templateInfoEnd = '';
 			if ($this->bln_debugMode) {
 				$str_templatesPathWithoutDirectoryUpPrefix = str_replace('../', '', $this->arr_templatesPaths[$str_templateName]);
-				$str_templateInfoBegin = '<!-- BEGIN LSJS TEMPLATE: ' . $str_templatesPathWithoutDirectoryUpPrefix . '/' . $str_templateName . '.html -->';
-				$str_templateInfoEnd = '<!-- END LSJS TEMPLATE: ' . $str_templatesPathWithoutDirectoryUpPrefix . '/' . $str_templateName . '.html -->';
+				$str_templateInfoBegin = '<!-- BEGIN LSJS TEMPLATE: ' . $str_templatesPathWithoutDirectoryUpPrefix . ' -->';
+				$str_templateInfoEnd = '<!-- END LSJS TEMPLATE: ' . $str_templatesPathWithoutDirectoryUpPrefix . ' -->';
 			}
 
 			$str_templateContent = preg_replace('/__templateInfoBegin__/', $str_templateInfoBegin, $str_templateContent);

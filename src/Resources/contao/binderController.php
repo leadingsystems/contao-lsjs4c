@@ -4,7 +4,7 @@ namespace LeadingSystems\Lsjs4c;
 
 use \MatthiasMullie\Minify;
 use LeadingSystems\Lsjs4c\modelCombiner;
-use LeadingSystems\Lsjs4c\lsjs_templateConverter;
+use LeadingSystems\Lsjs4c\templateConverter;
 
 include('binderFunctions.php');
 
@@ -57,16 +57,13 @@ class binderController {
 	protected $bln_useMinifier = true;
 	protected $bln_useCache = true;
 
-
 	protected $arr_files = array();
 	protected $arr_moduleStructure = array();
 	
 	protected $str_output = '';
-
-
-
 	
 	public function __construct(
+        $isFrontend = true,
 	    $bln_includeCore = true,
         $bln_includeCoreModules = true,
         $bln_includeAppModules = true,
@@ -83,12 +80,19 @@ class binderController {
         $this->bln_includeAppModules = $bln_includeAppModules;
         $this->bln_includeApp = $bln_includeApp;
 	    $this->str_pathToApp = $str_pathToApp;
+
         $this->str_pathToAppCustomization = $str_pathToAppCustomization;
         $this->str_pathToCoreCustomization = $str_pathToCoreCustomization;
 
-        $this->bln_debugMode = $GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'];
-        $this->bln_useCache = $GLOBALS['lsjs4c_globals']['lsjs4c_noCache'];
-        $this->bln_useMinifier = !$GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'];
+        if($isFrontend){
+            $this->bln_debugMode = $GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'];
+            $this->bln_useCache = !$GLOBALS['lsjs4c_globals']['lsjs4c_noCache'];
+            $this->bln_useMinifier = !$GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'];
+        }else{
+            $this->bln_debugMode = $GLOBALS['TL_CONFIG']['ls_shop_lsjsDebugMode'];
+            $this->bln_useCache = !$GLOBALS['TL_CONFIG']['ls_shop_lsjsNoCacheMode'];
+            $this->bln_useMinifier = !$GLOBALS['TL_CONFIG']['ls_shop_lsjsNoMinifierMode'];
+        }
 
 		$this->createCacheFolderIfNotExists();
 
@@ -130,7 +134,7 @@ class binderController {
 
 		$str_pathToCacheFile = self::c_str_pathToCache.'/'.$this->str_cacheHash.'.js';
 
-		if ($this->bln_useCache && false) {
+		if ($this->bln_useCache) {
 			if (file_exists(__DIR__."/../../../../../../".$str_pathToCacheFile)) {
                 return self::c_str_pathToCache.'/'.$this->str_cacheHash.'.js';
 			}
@@ -152,9 +156,9 @@ class binderController {
 			$this->str_output = $obj_minifier->minify();
 		}
 
-		if ($this->bln_useCache) {
-			file_put_contents( __DIR__."/../../../../../../".$str_pathToCacheFile, $this->str_output);
-		}
+		//save data in cache for later use
+        file_put_contents( __DIR__."/../../../../../../".$str_pathToCacheFile, $this->str_output);
+
         return $str_pathToCacheFile;
 	}
 	
@@ -176,18 +180,18 @@ class binderController {
 			$this->arr_files['coreModuleFiles'] = $this->combineOriginalAndCustomizationModuleFiles('core');
 		}
 
-		if (!file_exists($this->str_pathToApp)) {
+		//check is appFile exist
+		if (!file_exists(/**/ __DIR__."/../../../../../../".$this->str_pathToApp)) { //"files/merconisfiles/themes/theme10/lsjs/app/app.js"
 			return;
 		}
 
 		if ($this->bln_includeApp) {
-			$this->arr_files['mainAppFile'] = file_exists($this->str_pathToAppCustomization.'/'.self::c_str_appFileName) ? $this->str_pathToAppCustomization.'/'.self::c_str_appFileName : $this->str_pathToApp.'/'.self::c_str_appFileName;
+			$this->arr_files['mainAppFile'] = file_exists($this->str_pathToAppCustomization.'/'.self::c_str_appFileName) ? $this->str_pathToAppCustomization.'/'.self::c_str_appFileName : __DIR__."/../../../../../../".$this->str_pathToApp.'/'.self::c_str_appFileName;
 		}
 		
 		if ($this->bln_includeAppModules) {
-			$this->arr_files['appModuleFiles_original'] = $this->readModules($this->str_pathToApp.'/'.self::c_str_pathToModules);
-			$this->arr_files['appModuleFiles_customization'] = $this->str_pathToAppCustomization ? $this->readModules($this->str_pathToAppCustomization . '/' . self::c_str_pathToModules) : array();
-
+			$this->arr_files['appModuleFiles_original'] = $this->readModules( __DIR__."/../../../../../../".$this->str_pathToApp.'/'.self::c_str_pathToModules);
+			$this->arr_files['appModuleFiles_customization'] = $this->str_pathToAppCustomization ? $this->readModules( __DIR__."/../../../../../../".$this->str_pathToAppCustomization . '/' . self::c_str_pathToModules) : array();
 			$this->arr_files['appModuleFiles'] = $this->combineOriginalAndCustomizationModuleFiles();
 		}
 	}
@@ -433,7 +437,7 @@ class binderController {
 		}
 
 		try {
-			$obj_lsjs_templateConverter = new lsjs_templateConverter(
+			$obj_lsjs_templateConverter = new templateConverter(
 				$str_moduleName,
 				$arr_templateFiles,
 				self::c_str_pathToAppBinderBaseFiles.'/'.self::c_str_templateBasisFileName,
@@ -454,34 +458,22 @@ class binderController {
 			throw new Exception(__METHOD__.': $str_what has unsupported value');
 		}
 
-
-		
 		$str_completeModuleOutput = '';
 		if (isset($this->arr_files[$str_what.'ModuleFiles']) && is_array($this->arr_files[$str_what.'ModuleFiles'])) {
 			foreach($this->arr_files[$str_what.'ModuleFiles'] as $str_moduleName => $arr_moduleFiles) {
-
-			    dump("x");
-			    //dump($this->file_get_contents_envelope($arr_moduleFiles['viewFile']));
-			    //dump($this->file_get_contents_envelope($arr_moduleFiles['controllerFile']));
-
-
 
 				$str_moduleOutput = lsjsBinder_file_get_contents(self::c_str_pathToAppBinderBaseFiles.'/'.self::c_str_moduleBasisFileName);
 				$str_moduleOutput = preg_replace('/__viewFile__/', $this->file_get_contents_envelope($arr_moduleFiles['viewFile']), $str_moduleOutput);
 				$str_moduleOutput = preg_replace('/__controllerFile__/', $this->file_get_contents_envelope($arr_moduleFiles['controllerFile']), $str_moduleOutput);
 
 				$str_tmpOutput = $this->generateModelOutput($str_moduleName, $arr_moduleFiles['modelFiles']);
-                //dump($str_tmpOutput);
 				$str_moduleOutput = preg_replace('/__modelFiles__/', $str_tmpOutput, $str_moduleOutput);
 
 				$str_tmpOutput = $this->generateTemplateOutput($str_moduleName, $arr_moduleFiles['templateFiles']);
-                //dump($str_tmpOutput);
-                dump( $arr_moduleFiles['templateFiles']);
-                //dump($str_moduleName);
 				$str_moduleOutput = preg_replace('/__templateFiles__/', $str_tmpOutput, $str_moduleOutput);
 
 				$str_completeModuleOutput .= "\r\n".preg_replace('/__moduleName__/', $str_moduleName, $str_moduleOutput);
-                //dump($str_moduleName);
+
 			}
 		}
 		$this->str_output = preg_replace('/__'.$str_what.'_modules__/', $str_completeModuleOutput, $this->str_output);
@@ -492,6 +484,7 @@ class binderController {
 	 * instead of the complete file content in test cases.
 	 */
 	protected function file_get_contents_envelope($str_filePath) {
+
 		$bln_testMode = false;
 		if ($bln_testMode) {
 			if (!file_exists($str_filePath)) {

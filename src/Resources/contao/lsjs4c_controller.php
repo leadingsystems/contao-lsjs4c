@@ -33,7 +33,7 @@ class lsjs4c_controller extends \Controller {
 		 */
 		$str_coreCustomizationPath = $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoadTextPath'] ?: (is_array($GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad']);
 
-        $obj_lsjs_appBinderCore = new binderController(true,true,false,false, "", "", ($str_coreCustomizationPath ? urldecode($this->str_folderUpPrefix.$str_coreCustomizationPath) : ''));
+        $obj_lsjs_appBinderCore = new binderController(true,true,true,false,false, "", "", ($str_coreCustomizationPath ? urldecode($this->str_folderUpPrefix.$str_coreCustomizationPath) : ''));
         $jsFilepathCore = $obj_lsjs_appBinderCore->outputJS();
 
 		$GLOBALS['TL_JAVASCRIPT'][] = $jsFilepathCore;
@@ -45,7 +45,7 @@ class lsjs4c_controller extends \Controller {
 		$str_appCustomizationPath = $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoadTextPath'] ?: (is_array($GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad']);
 		$arr_hashesOfModulesToExclude = $this->getHashesOfModulesToExclude(count($GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExcludeTextPath']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExcludeTextPath'] : $GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExclude'], $str_appPath);
 
-        $obj_lsjs_appBinderApp = new binderController(false, false, true, true, $str_appPath, $str_appCustomizationPath, "", "", implode(',', $arr_hashesOfModulesToExclude));
+        $obj_lsjs_appBinderApp = new binderController(true,false, false, true, true, $str_appPath, $str_appCustomizationPath, "", "", implode(',', $arr_hashesOfModulesToExclude));
         $jsFilepathApp = $obj_lsjs_appBinderApp->outputJS();
         $GLOBALS['TL_JAVASCRIPT'][] = $jsFilepathApp;
 
@@ -106,9 +106,14 @@ class lsjs4c_controller extends \Controller {
             return $str_content;
         }
 
+        $obj_lsjs_appBinderCore = new binderController(false, true,true,false,false);
+        $jsFilepathCore = $obj_lsjs_appBinderCore->outputJS();
+
+        $GLOBALS['TL_JAVASCRIPT'][] = $jsFilepathCore;
+
         ob_start();
         ?>
-        <script src="assets/lsjs/core/appBinder/binder.php?output=js&includeAppModules=no&includeApp=no"></script>
+        <script src= "<?= $jsFilepathCore ?>"></script>
         <?php
         return str_replace('</head>', ob_get_clean()."\r\n</head>", $str_content);
     }
