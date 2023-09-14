@@ -136,6 +136,7 @@ class binderController {
 
 		if ($this->bln_useCache) {
 			if (file_exists(__DIR__."/../../../../../../".$str_pathToCacheFile)) {
+                $GLOBALS['TL_JAVASCRIPT'][] = $str_pathToCacheFile;
                 return self::c_str_pathToCache.'/'.$this->str_cacheHash.'.js';
 			}
 		}
@@ -159,6 +160,8 @@ class binderController {
 		//save data in cache for later use
         file_put_contents( __DIR__."/../../../../../../".$str_pathToCacheFile, $this->str_output);
 
+		//adds Javascript to global TL_JAVASCRIPT array so contao can use and add it
+        $GLOBALS['TL_JAVASCRIPT'][] = $str_pathToCacheFile;
         return $str_pathToCacheFile;
 	}
 	
