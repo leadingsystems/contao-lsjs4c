@@ -32,7 +32,7 @@ class binderController {
 	const c_str_lsjsTemplateHandlerFileName = 'lsjs_templateHandler.js';
 	const c_str_lsVersionFileName = 'ls_version.txt';
 	
-	const c_str_pathToAppBinderBaseFiles = __DIR__."/../../../../../../assets/lsjs/core/appBinder/baseFiles";
+	const c_str_pathToAppBinderBaseFiles = self::c_str_pathMain."/assets/lsjs/core/appBinder/baseFiles";
 	const c_str_mainContainerBasisFileName = 'mainContainer.js';
 	const c_str_templateBasisFileName = 'templateBasis.js';
 	const c_str_modelBasisFileName = 'modelBasis.js';
@@ -135,7 +135,7 @@ class binderController {
 		$str_pathToCacheFile = self::c_str_pathToCache.'/'.$this->str_cacheHash.'.js';
 
 		if ($this->bln_useCache) {
-			if (file_exists(__DIR__."/../../../../../../".$str_pathToCacheFile)) {
+			if (file_exists(self::c_str_pathMain."/".$str_pathToCacheFile)) {
                 $GLOBALS['TL_JAVASCRIPT'][] = $str_pathToCacheFile;
                 return self::c_str_pathToCache.'/'.$this->str_cacheHash.'.js';
 			}
@@ -158,9 +158,9 @@ class binderController {
 		}
 
 		//save data in cache for later use
-        file_put_contents( __DIR__."/../../../../../../".$str_pathToCacheFile, $this->str_output);
+        file_put_contents( self::c_str_pathMain."/".$str_pathToCacheFile, $this->str_output);
 
-		//adds Javascript to global TL_JAVASCRIPT array so contao can use and add it
+		//adds Javascript to global TL_JAVASCRIPT array so contao can use and add it, only works if not added to late, but can still be added manually
         $GLOBALS['TL_JAVASCRIPT'][] = $str_pathToCacheFile;
         return $str_pathToCacheFile;
 	}
@@ -184,17 +184,17 @@ class binderController {
 		}
 
 		//check is appFile exist
-		if (!file_exists(/**/ __DIR__."/../../../../../../".$this->str_pathToApp)) { //"files/merconisfiles/themes/theme10/lsjs/app/app.js"
+		if (!file_exists(/**/ self::c_str_pathMain."/".$this->str_pathToApp)) {
 			return;
 		}
 
 		if ($this->bln_includeApp) {
-			$this->arr_files['mainAppFile'] = file_exists($this->str_pathToAppCustomization.'/'.self::c_str_appFileName) ? $this->str_pathToAppCustomization.'/'.self::c_str_appFileName : __DIR__."/../../../../../../".$this->str_pathToApp.'/'.self::c_str_appFileName;
+			$this->arr_files['mainAppFile'] = file_exists($this->str_pathToAppCustomization.'/'.self::c_str_appFileName) ? $this->str_pathToAppCustomization.'/'.self::c_str_appFileName : self::c_str_pathMain."/".$this->str_pathToApp.'/'.self::c_str_appFileName;
 		}
 		
 		if ($this->bln_includeAppModules) {
-			$this->arr_files['appModuleFiles_original'] = $this->readModules( __DIR__."/../../../../../../".$this->str_pathToApp.'/'.self::c_str_pathToModules);
-			$this->arr_files['appModuleFiles_customization'] = $this->str_pathToAppCustomization ? $this->readModules( __DIR__."/../../../../../../".$this->str_pathToAppCustomization . '/' . self::c_str_pathToModules) : array();
+			$this->arr_files['appModuleFiles_original'] = $this->readModules( self::c_str_pathMain."/".$this->str_pathToApp.'/'.self::c_str_pathToModules);
+			$this->arr_files['appModuleFiles_customization'] = $this->str_pathToAppCustomization ? $this->readModules( self::c_str_pathMain."/".$this->str_pathToAppCustomization . '/' . self::c_str_pathToModules) : array();
 			$this->arr_files['appModuleFiles'] = $this->combineOriginalAndCustomizationModuleFiles();
 		}
 	}
