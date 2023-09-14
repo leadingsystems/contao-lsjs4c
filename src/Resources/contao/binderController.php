@@ -107,8 +107,23 @@ class binderController {
         $this->generateCacheHash();
 
 	}
-	
+
 	protected function generateCacheHash(){
+
+
+	    $prefix = "ls_";
+	    if($this->bln_includeCore){
+            $prefix .= "core_";
+        }
+        if($this->bln_includeCoreModules){
+            $prefix .= "coreModules_";
+        }
+        if($this->bln_includeApp){
+            $prefix .= "app_";
+        }
+        if($this->bln_includeAppModules){
+            $prefix .= "appModules_";
+        }
 
         $string = "";
 
@@ -133,7 +148,7 @@ class binderController {
         $string .= $this->arr_files['mainAppFile'] . filemtime($this->arr_files['mainAppFile']);
 
         //add options so Hashstring and generate md5 hash
-        $this->str_cacheHash = md5($string
+        $this->str_cacheHash = $prefix.md5($string
             .($this->bln_debugMode? 1 : 0)
             .($this->bln_useCache? 1 : 0)
             .($this->bln_useMinifier? 1 : 0)
@@ -219,7 +234,7 @@ class binderController {
 		}
 
 		if ($this->bln_includeApp) {
-			$this->arr_files['mainAppFile'] = file_exists($this->str_pathToAppCustomization.'/'.self::c_str_appFileName) ? $this->str_pathToAppCustomization.'/'.self::c_str_appFileName : self::c_str_pathMain."/".$this->str_pathToApp.'/'.self::c_str_appFileName;
+			$this->arr_files['mainAppFile'] = file_exists(self::c_str_pathMain.$this->str_pathToAppCustomization.'/'.self::c_str_appFileName) ? self::c_str_pathMain.$this->str_pathToAppCustomization.'/'.self::c_str_appFileName : self::c_str_pathMain."/".$this->str_pathToApp.'/'.self::c_str_appFileName;
 		}
 		
 		if ($this->bln_includeAppModules) {
@@ -554,126 +569,5 @@ class binderController {
 	
 	public function getFileList() {
 		return $this->arr_files;
-	}
-
-	/*
-	 * Since passing a url as a get parameter can cause the request to be blocked when there are many "folder up" parts
-	 * in the url (false positive for apache parent directory attack), we use a special keyword followed by a number
-	 * (e.g. _dup7_) to name the number of "folder ups" and then translate it into the correct "../../../.." part.
-	 */
-	protected function replaceDirectoryUpAbbreviation($str_url) {
-		$str_url = preg_replace_callback(
-			'/_dup([0-9]+?)_/',
-			function($arr_matches) {
-				$arr_dirUp = array();
-				for ($i = 1; $i <= $arr_matches[1]; $i++) {
-					$arr_dirUp[] = '..';
-				}
-				$str_dirUpPrefix = implode('/', $arr_dirUp);
-
-				return $str_dirUpPrefix;
-			},
-			$str_url
-		);
-
-		return $str_url;
-	}
-	
-	protected function processGetParameters() {
-		$str_cacheStringRaw = '';
-
-		if (isset($_GET['debug']) && $_GET['debug']) {
-			$this->bln_debugMode = true;
-		}
-		$str_cacheStringRaw .= $this->bln_debugMode ? '1' : '0';
-
-
-		if (isset($_GET['no-cache']) && $_GET['no-cache']) {
-			$this->bln_useCache = false;
-		}
-		$str_cacheStringRaw .= $this->bln_useCache ? '1' : '0';
-
-
-		if (isset($_GET['no-minifier']) && $_GET['no-minifier']) {
-			$this->bln_useMinifier = false;
-		}
-		$str_cacheStringRaw .= $this->bln_useMinifier ? '1' : '0';
-
-
-		if (isset($_GET['pathToApp']) && $_GET['pathToApp']) {
-			$this->str_pathToApp = $this->replaceDirectoryUpAbbreviation($_GET['pathToApp']);
-		}
-		$str_cacheStringRaw .= $this->str_pathToApp;
-
-
-		if (isset($_GET['pathToAppCustomization']) && $_GET['pathToAppCustomization']) {
-			$this->str_pathToAppCustomization = $this->replaceDirectoryUpAbbreviation($_GET['pathToAppCustomization']);
-		}
-		$str_cacheStringRaw .= $this->str_pathToAppCustomization;
-
-
-		if (isset($_GET['pathToCoreCustomization']) && $_GET['pathToCoreCustomization']) {
-			$this->str_pathToCoreCustomization = $this->replaceDirectoryUpAbbreviation($_GET['pathToCoreCustomization']);
-		}
-		$str_cacheStringRaw .= $this->str_pathToCoreCustomization;
-
-
-		if (isset($_GET['whitelist']) && $_GET['whitelist']) {
-			$this->setModuleWhitelist($_GET['whitelist']);
-			$str_cacheStringRaw .= $_GET['whitelist'];
-		} else {
-			$str_cacheStringRaw .= '-no-whitelist-';
-		}
-
-
-		if (isset($_GET['blacklist']) && $_GET['blacklist']) {
-			$this->setModuleBlacklist($_GET['blacklist']);
-			$str_cacheStringRaw .= $_GET['blacklist'];
-		} else {
-			$str_cacheStringRaw .= '-no-blacklist-';
-		}
-
-
-		if (isset($_GET['includeCore'])) {
-			if ($_GET['includeCore'] == 'yes') {
-				$this->bln_includeCore = true;
-			} else {
-				$this->bln_includeCore = false;
-			}
-		}
-		$str_cacheStringRaw .= $this->bln_includeCore ? '1' : '0';
-
-		
-		if (isset($_GET['includeCoreModules'])) {
-			if ($_GET['includeCoreModules'] == 'yes') {
-				$this->bln_includeCoreModules = true;
-			} else {
-				$this->bln_includeCoreModules = false;
-			}
-		}
-		$str_cacheStringRaw .= $this->bln_includeCoreModules ? '1' : '0';
-
-
-		if (isset($_GET['includeAppModules'])) {
-			if ($_GET['includeAppModules'] == 'yes') {
-				$this->bln_includeAppModules = true;
-			} else {
-				$this->bln_includeAppModules = false;
-			}
-		}
-		$str_cacheStringRaw .= $this->bln_includeAppModules ? '1' : '0';
-
-
-		if (isset($_GET['includeApp'])) {
-			if ($_GET['includeApp'] == 'yes') {
-				$this->bln_includeApp = true;
-			} else {
-				$this->bln_includeApp = false;
-			}
-		}
-		$str_cacheStringRaw .= $this->bln_includeApp ? '1' : '0';
-
-		
-		$this->str_cacheHash = md5($str_cacheStringRaw);
 	}
 }
