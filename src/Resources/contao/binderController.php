@@ -103,12 +103,37 @@ class binderController {
             $this->setModuleWhitelist($whitelist);
         }
 
+        $this->readAllFiles();
         $this->generateCacheHash();
-		$this->readAllFiles();
-	}
 
+	}
+	
 	protected function generateCacheHash(){
-        $this->str_cacheHash = md5(""
+
+        $string = "";
+
+        //add core and app modules to Hashstring
+        $types = ["core", "app"];
+        foreach($types as $type) {
+            foreach ($this->arr_files[$type.'ModuleFiles'] as $file) {
+                $string .=
+                    $file["viewFile"]
+                    . filemtime($file["viewFile"])
+                    . $file["controllerFile"]
+                    . filemtime($file["controllerFile"]);
+            }
+        }
+
+        //add main core Files to Hashstring
+        $string .= $this->arr_files['mainCoreFiles']['lsjs'] . filemtime($this->arr_files['mainCoreFiles']['lsjs']);
+        $string .= $this->arr_files['mainCoreFiles']['lsjs_templateHandler'] . filemtime($this->arr_files['mainCoreFiles']['lsjs_templateHandler']);
+        $string .= $this->arr_files['mainCoreFiles']['ls_version'] . filemtime($this->arr_files['mainCoreFiles']['ls_version']);
+
+        //add main app File to Hashstring
+        $string .= $this->arr_files['mainAppFile'] . filemtime($this->arr_files['mainAppFile']);
+
+        //add options so Hashstring and generate md5 hash
+        $this->str_cacheHash = md5($string
             .($this->bln_debugMode? 1 : 0)
             .($this->bln_useCache? 1 : 0)
             .($this->bln_useMinifier? 1 : 0)
@@ -134,6 +159,8 @@ class binderController {
 
 		$str_pathToCacheFile = self::c_str_pathToCache.'/'.$this->str_cacheHash.'.js';
 
+
+
 		if ($this->bln_useCache) {
 			if (file_exists(self::c_str_pathMain."/".$str_pathToCacheFile)) {
                 $GLOBALS['TL_JAVASCRIPT'][] = $str_pathToCacheFile;
@@ -141,12 +168,15 @@ class binderController {
 			}
 		}
 
+
 		$this->str_output = lsjsBinder_file_get_contents(self::c_str_pathToAppBinderBaseFiles.'/'.self::c_str_mainContainerBasisFileName);
 
 		$this->str_output = preg_replace('/__ls_version__/', (!$this->bln_includeCore ? '' : '/* '.$this->file_get_contents_envelope($this->arr_files['mainCoreFiles']['ls_version']).' */'), $this->str_output);
 		$this->str_output = preg_replace('/__lsjs__/', (!$this->bln_includeCore ? '' : $this->file_get_contents_envelope($this->arr_files['mainCoreFiles']['lsjs'])), $this->str_output);
 		$this->str_output = preg_replace('/__lsjs_templateHandler__/', (!$this->bln_includeCore ? '' : $this->file_get_contents_envelope($this->arr_files['mainCoreFiles']['lsjs_templateHandler'])), $this->str_output);
 		$this->str_output = preg_replace('/__app__/', (!$this->bln_includeApp || !isset($this->arr_files['mainAppFile']) ? '' : $this->file_get_contents_envelope($this->arr_files['mainAppFile'])), $this->str_output);
+
+
 
 		$this->generateModuleOutput('core');
 		$this->generateModuleOutput('app');
@@ -460,6 +490,8 @@ class binderController {
 		if (!in_array($str_what, array('core', 'app'))) {
 			throw new Exception(__METHOD__.': $str_what has unsupported value');
 		}
+
+		//dump($this->arr_files[$str_what.'ModuleFiles']);
 
 		$str_completeModuleOutput = '';
 		if (isset($this->arr_files[$str_what.'ModuleFiles']) && is_array($this->arr_files[$str_what.'ModuleFiles'])) {
