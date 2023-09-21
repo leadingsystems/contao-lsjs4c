@@ -48,7 +48,7 @@ class lsjs4c_controller extends \Controller {
         ];
 
 		$binderController = new \lsjs_binderController($arr_config);
-        $GLOBALS['TL_JAVASCRIPT'][] = "/assets/lsjs/core/appBinder/".$binderController->outputJS();
+        $GLOBALS['TL_JAVASCRIPT'][] = "/assets/lsjs/core/appBinder/".$binderController->getJS();
 
         /*
          * Load the lsjs apps
@@ -70,7 +70,7 @@ class lsjs4c_controller extends \Controller {
         ];
 
         $binderController = new \lsjs_binderController($arr_config);
-        $GLOBALS['TL_JAVASCRIPT'][] = "/assets/lsjs/core/appBinder/".$binderController->outputJS();
+        $GLOBALS['TL_JAVASCRIPT'][] = "/assets/lsjs/core/appBinder/".$binderController->getJS();
 	}
 
     protected function getHashesOfModulesToExclude($arr_modulesToExclude, $str_appPath) {
@@ -134,7 +134,7 @@ class lsjs4c_controller extends \Controller {
         ];
 
         $binderController = new \lsjs_binderController($arr_config);
-        $str_output = "/assets/lsjs/core/appBinder/".$binderController->outputJS();
+        $str_output = "/assets/lsjs/core/appBinder/".$binderController->getJS();
         $GLOBALS['TL_JAVASCRIPT'][] = $str_output;
 
 
