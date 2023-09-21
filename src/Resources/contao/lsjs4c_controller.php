@@ -2,6 +2,7 @@
 
 namespace LeadingSystems\Lsjs4c;
 use function LeadingSystems\Helpers\ls_getFilePathFromVariableSources;
+use Contao\System;
 
 class lsjs4c_controller extends \Controller {
 	protected $str_folderUpPrefix = '_dup4_/';
@@ -33,12 +34,19 @@ class lsjs4c_controller extends \Controller {
 		 */
 		$str_coreCustomizationPath = $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoadTextPath'] ?: (is_array($GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad']);
 
-		$GLOBALS['TL_JAVASCRIPT'][] =
-			'assets/lsjs/core/appBinder/binder.php?output=js&includeAppModules=no&includeApp=no'
-			.($str_coreCustomizationPath ? '&pathToCoreCustomization='.urldecode($this->str_folderUpPrefix.$str_coreCustomizationPath) : '')
-			.($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '&debug=1' : '')
-			.($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '&no-cache=1' : '')
-			.($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '&no-minifier=1' : '');
+        require_once(System::getContainer()->getParameter('kernel.project_dir')."/assets/lsjs/core/appBinder/binderController.php");
+
+        $arr_config = [
+            "includeAppModules" => 'no',
+            "includeApp" => 'no',
+            "pathToCoreCustomization" => ($str_coreCustomizationPath ? urldecode($this->str_folderUpPrefix.$str_coreCustomizationPath) : ''),
+            "debug" => ($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '1' : ''),
+            "no-cache" => ($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '1' : ''),
+            "no-minifier" => ($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '1' : ''),
+        ];
+
+		$binderController = new \lsjs_binderController($arr_config);
+        $GLOBALS['TL_JAVASCRIPT'][] = "/assets/lsjs/core/appBinder/".$binderController->outputJS();
 
 		/*
 		 * Load the lsjs apps
@@ -47,14 +55,20 @@ class lsjs4c_controller extends \Controller {
 		$str_appCustomizationPath = $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoadTextPath'] ?: (is_array($GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad']);
 		$arr_hashesOfModulesToExclude = $this->getHashesOfModulesToExclude(count($GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExcludeTextPath']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExcludeTextPath'] : $GLOBALS['lsjs4c_globals']['lsjs4c_modulesToExclude'], $str_appPath);
 
-		$GLOBALS['TL_JAVASCRIPT'][] =
-			'assets/lsjs/core/appBinder/binder.php?output=js&pathToApp='.urldecode($this->str_folderUpPrefix.$str_appPath)
-			.'&includeCore=no&includeCoreModules=no'
-			.($str_appCustomizationPath ? '&pathToAppCustomization='.urldecode($this->str_folderUpPrefix.$str_appCustomizationPath) : '')
-			.(count($arr_hashesOfModulesToExclude) ? '&blacklist='.implode(',', $arr_hashesOfModulesToExclude) : '')
-			.($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '&debug=1' : '')
-			.($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '&no-cache=1' : '')
-			.($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '&no-minifier=1' : '');
+
+        $arr_config = [
+            "pathToApp" => urldecode($this->str_folderUpPrefix.$str_appPath),
+            "includeCore" => 'no',
+            "includeCoreModules" => 'no',
+            "pathToAppCustomization" => ($str_appCustomizationPath ? urldecode($this->str_folderUpPrefix.$str_appCustomizationPath): ''),
+            "blacklist" => (count($arr_hashesOfModulesToExclude) ? implode(',', $arr_hashesOfModulesToExclude) : ''),
+            "debug" => ($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '1' : ''),
+            "no-cache" => ($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '1' : ''),
+            "no-minifier" => ($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '1' : ''),
+        ];
+
+        $binderController = new \lsjs_binderController($arr_config);
+        $GLOBALS['TL_JAVASCRIPT'][] = "/assets/lsjs/core/appBinder/".$binderController->outputJS();
 	}
 
 	protected function getHashesOfModulesToExclude($arr_modulesToExclude, $str_appPath) {
@@ -112,9 +126,21 @@ class lsjs4c_controller extends \Controller {
             return $str_content;
         }
 
+        require_once(System::getContainer()->getParameter('kernel.project_dir')."/assets/lsjs/core/appBinder/binderController.php");
+
+        $arr_config = [
+            "includeApp" => "no",
+            "includeAppModules" => "no"
+        ];
+
+        $binderController = new \lsjs_binderController($arr_config);
+        $str_output = "/assets/lsjs/core/appBinder/".$binderController->outputJS();
+        $GLOBALS['TL_JAVASCRIPT'][] = $str_output;
+
+
         ob_start();
         ?>
-        <script src="assets/lsjs/core/appBinder/binder.php?output=js&includeAppModules=no&includeApp=no"></script>
+        <script src="<?= $str_output ?>"></script>
         <?php
         return str_replace('</head>', ob_get_clean()."\r\n</head>", $str_content);
     }
