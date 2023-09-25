@@ -6,9 +6,7 @@ namespace LeadingSystems\Lsjs4c;
  * Include the lsjs core in FE and BE
  */
 
-use Contao\System;
-
-if (System::getContainer()->get('merconis.routing.scope_matcher')->isBackend()) {
+if (TL_MODE === 'BE') {
     $GLOBALS['TL_HOOKS']['outputBackendTemplate'][] = array('LeadingSystems\Lsjs4c\lsjs4c_controller', 'getBackendLsjs');
 }
 
