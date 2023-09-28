@@ -89,7 +89,7 @@ class lsjs4c_controller extends \Controller {
 
 		$GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoadTextPath'] = $objLayout->lsjs4c_coreCustomizationToLoadTextPath;
 
-		$arr_modulesToExclude = deserialize($objLayout->lsjs4c_modulesToExclude, true);
+		$arr_modulesToExclude = \Contao\StringUtil::deserialize($objLayout->lsjs4c_modulesToExclude, true);
 		$arr_modulePaths = array();
 		foreach ($arr_modulesToExclude as $bin_uuid) {
 			$arr_modulePaths[] = ls_getFilePathFromVariableSources($bin_uuid);
