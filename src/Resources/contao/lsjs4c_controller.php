@@ -2,8 +2,9 @@
 
 namespace LeadingSystems\Lsjs4c;
 
-use function LeadingSystems\Helpers\ls_getFilePathFromVariableSources;
+use Contao\StringUtil;
 use Contao\System;
+use function LeadingSystems\Helpers\ls_getFilePathFromVariableSources;
 
 class lsjs4c_controller extends \Controller {
     protected $str_folderUpPrefix = '_dup4_/';
@@ -104,7 +105,7 @@ class lsjs4c_controller extends \Controller {
 
         $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoadTextPath'] = $objLayout->lsjs4c_coreCustomizationToLoadTextPath;
 
-        $arr_modulesToExclude = deserialize($objLayout->lsjs4c_modulesToExclude, true);
+        $arr_modulesToExclude = StringUtil::deserialize($objLayout->lsjs4c_modulesToExclude, true);
         $arr_modulePaths = array();
         foreach ($arr_modulesToExclude as $bin_uuid) {
             $arr_modulePaths[] = ls_getFilePathFromVariableSources($bin_uuid);
@@ -119,8 +120,6 @@ class lsjs4c_controller extends \Controller {
 
         $GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] = $objLayout->lsjs4c_noMinifier;
     }
-
-
 
     public static function getBackendLsjs($str_content, $str_template) {
         if ($str_template !== 'be_main') {
