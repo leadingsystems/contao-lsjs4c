@@ -2,6 +2,8 @@
 
 namespace LeadingSystems\Lsjs4c;
 
+use Contao\System;
+
 $GLOBALS['TL_DCA']['tl_layout']['config']['onsubmit_callback'][] = ['LeadingSystems\Lsjs4c\tl_layout_controller', 'handleCache'];
 
 $GLOBALS['TL_DCA']['tl_layout']['palettes']['default'] .= ';{lsjs4c_legend},lsjs4c_loadLsjs,lsjs4c_appToLoad,lsjs4c_appToLoadTextPath,lsjs4c_appCustomizationToLoad,lsjs4c_appCustomizationToLoadTextPath,lsjs4c_coreCustomizationToLoad,lsjs4c_coreCustomizationToLoadTextPath,lsjs4c_modulesToExclude,lsjs4c_modulesToExcludeTextPath,lsjs4c_debugMode,lsjs4c_noCache,lsjs4c_noMinifier';
@@ -122,7 +124,6 @@ $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_noMinifier'] = array(
 	'eval'                    => array('tl_class'=>'m12')
 );
 
-use Contao\System;
 class tl_layout_controller extends \Backend {
     public function handleCache($dc) {
         if ($dc->activeRecord->lsjs4c_noCache) {
