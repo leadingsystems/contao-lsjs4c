@@ -4,3 +4,12 @@ services:
     autowire: true
     autoconfigure: true
     public: false
+
+  LeadingSystems\LSJS4CBundle\EventSubscriber\LsjsInsertionSubscriber:
+    arguments:
+      - '@contao.framework'
+      - '@contao.routing.scope_matcher'
+      - '%contao.web_dir%'
+      - '%kernel.project_dir%'
+    tags:
+      - { name: 'kernel.event_subscriber' }
