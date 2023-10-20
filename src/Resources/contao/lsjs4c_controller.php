@@ -44,7 +44,6 @@ class lsjs4c_controller extends \Controller {
             'includeApp' => 'no',
             'pathToCoreCustomization' => ($str_coreCustomizationPath ? $str_projectDir . '/' . $str_coreCustomizationPath : ''),
             'debug' => ($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '1' : ''),
-            'no-cache' => ($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '1' : ''),
             'no-minifier' => ($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '1' : ''),
         ];
 
@@ -65,7 +64,6 @@ class lsjs4c_controller extends \Controller {
             'includeCoreModules' => 'no',
             'pathToAppCustomization' => ($str_appCustomizationPath ? $str_projectDir . '/' . $str_appCustomizationPath : ''),
             'debug' => ($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '1' : ''),
-            'no-cache' => ($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '1' : ''),
             'no-minifier' => ($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '1' : ''),
         ];
 
@@ -89,8 +87,6 @@ class lsjs4c_controller extends \Controller {
         $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoadTextPath'] = $objLayout->lsjs4c_coreCustomizationToLoadTextPath;
 
         $GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] = $objLayout->lsjs4c_debugMode;
-
-        $GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] = $objLayout->lsjs4c_noCache;
 
         $GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] = $objLayout->lsjs4c_noMinifier;
     }

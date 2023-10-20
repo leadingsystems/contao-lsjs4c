@@ -34,7 +34,6 @@ class LsjsInsertionSubscriber implements EventSubscriberInterface
                 'includeApp' => 'no',
                 'includeAppModules' => 'no',
                 'debug' => '1',
-                'no-cache' => '1',
                 'no-minifier' => '1',
             ];
 
