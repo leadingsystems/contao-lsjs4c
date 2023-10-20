@@ -2,11 +2,7 @@
 
 namespace LeadingSystems\Lsjs4c;
 
-use Contao\System;
-
-$GLOBALS['TL_DCA']['tl_layout']['config']['onsubmit_callback'][] = ['LeadingSystems\Lsjs4c\tl_layout_controller', 'handleCache'];
-
-$GLOBALS['TL_DCA']['tl_layout']['palettes']['default'] .= ';{lsjs4c_legend},lsjs4c_loadLsjs,lsjs4c_appToLoad,lsjs4c_appToLoadTextPath,lsjs4c_appCustomizationToLoad,lsjs4c_appCustomizationToLoadTextPath,lsjs4c_coreCustomizationToLoad,lsjs4c_coreCustomizationToLoadTextPath,lsjs4c_debugMode,lsjs4c_noCache,lsjs4c_noMinifier';
+$GLOBALS['TL_DCA']['tl_layout']['palettes']['default'] .= ';{lsjs4c_legend},lsjs4c_loadLsjs,lsjs4c_appToLoad,lsjs4c_appToLoadTextPath,lsjs4c_appCustomizationToLoad,lsjs4c_appCustomizationToLoadTextPath,lsjs4c_coreCustomizationToLoad,lsjs4c_coreCustomizationToLoadTextPath,lsjs4c_debugMode,lsjs4c_noMinifier';
 
 $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_loadLsjs'] = array
 (
@@ -80,33 +76,11 @@ $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_debugMode'] = array
     'sql'                     => "char(1) NOT NULL default ''"
 );
 
-$GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_noCache'] = array
-(
-    'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_noCache'],
-    'exclude'                 => true,
-    'inputType'               => 'checkbox',
-    'eval'                    => array('tl_class' => 'm12'),
-    'sql'                     => "char(1) NOT NULL default ''"
-);
-
 $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_noMinifier'] = array
 (
     'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_noMinifier'],
     'exclude'                 => true,
     'inputType'               => 'checkbox',
-    'eval'                    => array('tl_class' => 'm12'),
+    'eval'                    => array('tl_class'=>'m12')
     'sql'                     => "char(1) NOT NULL default ''"
 );
-
-class tl_layout_controller extends \Backend {
-    public function handleCache($dc) {
-        if ($dc->activeRecord->lsjs4c_noCache) {
-            $arr_files = glob(System::getContainer()->getParameter('kernel.project_dir') . '/assets/lsjs/cache/*');
-            foreach($arr_files as $str_filePath){
-                if(is_file($str_filePath)) {
-                    unlink($str_filePath);
-                }
-            }
-        }
-    }
-}
