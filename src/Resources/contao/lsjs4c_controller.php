@@ -119,32 +119,6 @@ class lsjs4c_controller extends \Controller {
 		$GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] = $objLayout->lsjs4c_noMinifier;
 	}
 
-
-
-    public static function getBackendLsjs($str_content, $str_template) {
-        if ($str_template !== 'be_main') {
-            return $str_content;
-        }
-
-        require_once(System::getContainer()->getParameter('kernel.project_dir')."/assets/lsjs/core/appBinder/binderController.php");
-
-        $arr_config = [
-            "includeApp" => "no",
-            "includeAppModules" => "no"
-        ];
-
-        $binderController = new \lsjs_binderController($arr_config);
-        $str_output = "/assets/lsjs/core/appBinder/".$binderController->getJS();
-        $GLOBALS['TL_JAVASCRIPT'][] = $str_output;
-
-
-        ob_start();
-        ?>
-        <script src="<?= $str_output ?>"></script>
-        <?php
-        return str_replace('</head>', ob_get_clean()."\r\n</head>", $str_content);
-    }
-
     protected function replaceDirectoryUpAbbreviation($str_url) {
         $str_url = preg_replace_callback(
             '/_dup([0-9]+?)_/',
