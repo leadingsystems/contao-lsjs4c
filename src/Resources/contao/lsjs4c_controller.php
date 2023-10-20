@@ -42,7 +42,7 @@ class lsjs4c_controller extends \Controller {
             'pathForRenderedFiles' => $str_projectDir . '/assets/js',
             'includeAppModules' => 'no',
             'includeApp' => 'no',
-            'pathToCoreCustomization' => ($str_coreCustomizationPath ? $str_projectDir . '' . $str_coreCustomizationPath : ''),
+            'pathToCoreCustomization' => ($str_coreCustomizationPath ? $str_projectDir . '/' . $str_coreCustomizationPath : ''),
             'debug' => ($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '1' : ''),
             'no-cache' => ($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '1' : ''),
             'no-minifier' => ($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '1' : ''),
@@ -60,10 +60,10 @@ class lsjs4c_controller extends \Controller {
 
         $arr_config = [
             'pathForRenderedFiles' => $str_projectDir . '/assets/js',
-            'pathToApp' => $str_projectDir . '' . $str_appPath,
+            'pathToApp' => $str_projectDir . '/' . $str_appPath,
             'includeCore' => 'no',
             'includeCoreModules' => 'no',
-            'pathToAppCustomization' => ($str_appCustomizationPath ? $str_projectDir . '' . $str_appCustomizationPath : ''),
+            'pathToAppCustomization' => ($str_appCustomizationPath ? $str_projectDir . '/' . $str_appCustomizationPath : ''),
             'debug' => ($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '1' : ''),
             'no-cache' => ($GLOBALS['lsjs4c_globals']['lsjs4c_noCache'] ? '1' : ''),
             'no-minifier' => ($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '1' : ''),
