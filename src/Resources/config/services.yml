@@ -13,3 +13,13 @@ services:
       - '%kernel.project_dir%'
     tags:
       - { name: 'kernel.event_subscriber' }
+
+  LeadingSystems\LSJS4CBundle\EventListener\GetPageLayoutListener:
+    tags:
+      - { name: contao.hook, hook: getPageLayout, method: getLayoutSettingsForGlobalUse }
+
+  LeadingSystems\LSJS4CBundle\EventListener\GeneratePageListener:
+    arguments:
+      - '%kernel.project_dir%'
+    tags:
+      - { name: contao.hook, hook: generatePage, method: insertLsjs }
