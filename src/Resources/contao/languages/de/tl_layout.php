@@ -9,10 +9,7 @@
 	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_appCustomizationToLoadTextPath'] = array('Zu ladende App-Anpassung (freie Pfadangabe)', 'Wenn Sie eine Ressource angeben möchten, die außerhalb des "files"-Verzeichnisses von Contao liegt, geben Sie hier den Pfad an.');
 	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_coreCustomizationToLoad'] = array('Zu ladende Core-Anpassung', 'W&auml;hlen Sie das Verzeichnis der Core-Anpassung, die Sie laden m&ouml;chten. Bitte lesen Sie die LSJS-Dokumentation f&uuml;r weitere Informationen.');
 	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_coreCustomizationToLoadTextPath'] = array('Zu ladende Core-Anpassung (freie Pfadangabe)', 'Wenn Sie eine Ressource angeben möchten, die außerhalb des "files"-Verzeichnisses von Contao liegt, geben Sie hier den Pfad an.');
-	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_modulesToExclude'] = array('Auszuschlie&szlig;ende Module', 'W&auml;hlen Sie die Verzeichnisse der Module, die Sie ausschlie&szlig;en m&ouml;chten.');
-	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_modulesToExcludeTextPath'] = array('Auszuschlie&szlig;ende Module (freie Pfadangaben)', 'Wenn Sie Ressourcen angeben möchten, die außerhalb des "files"-Verzeichnisses von Contao liegen, geben Sie hier die Pfade kommagetrennt an.');
 	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_debugMode'] = array('Debug-Modus', 'In diesem Modus werden Template-Pfade in von LSJS gerenderten HTML-Ausgaben angezeigt.');
-	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_noCache'] = array('Cache umgehen', 'Das Caching-System von LSJS nicht nutzen.');
 	$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_noMinifier'] = array('Minifier nicht nutzen', 'Von LSJS erzeugte Ausgaben nicht verkleinern und optimieren.');
 
 	/*
