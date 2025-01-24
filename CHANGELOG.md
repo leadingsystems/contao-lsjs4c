@@ -1,5 +1,7 @@
-Leading Systems LSJS4C bundle for Contao 4 changelog
+Leading Systems LSJS4C bundle for Contao changelog
 ===========================================
+
+##### v3.0.3 (2025-01-24)
 
 ##### v3.0.2 (2023-12-11)
  * Improve caching
