@@ -22,7 +22,15 @@ class GeneratePageListener
         /*
          * Load the lsjs core
          */
-        $str_coreCustomizationPath = $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoadTextPath'] ?: (is_array($GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad']);
+
+        $arr_corePaths = unserialize($GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad']);
+
+        // Path entrys are relative to the root path, this must be changed
+        if (is_array($arr_corePaths)) {
+            foreach ($arr_corePaths as $key => $path) {
+                $arr_corePaths[$key] = $this->projectDir . '/' . $path;
+            }
+        }
 
         require_once($this->projectDir . "/assets/lsjs/core/appBinder/binderController.php");
 
@@ -30,7 +38,7 @@ class GeneratePageListener
             'pathForRenderedFiles' => $this->projectDir . '/assets/js',
             'includeAppModules' => 'no',
             'includeApp' => 'no',
-            'pathToCoreCustomization' => ($str_coreCustomizationPath ? $this->projectDir . '/' . $str_coreCustomizationPath : ''),
+            'pathToCoreCustomization' => $arr_corePaths,
             'debug' => ($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '1' : ''),
             'no-minifier' => ($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '1' : ''),
         ];
@@ -41,16 +49,21 @@ class GeneratePageListener
         /*
          * Load the lsjs apps
          */
-        $str_appPath = $GLOBALS['lsjs4c_globals']['lsjs4c_appToLoadTextPath'] ?: (is_array($GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_appToLoad']);
-        $str_appCustomizationPath = $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoadTextPath'] ?: (is_array($GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad']) ? $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad'][0] : $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad']);
 
+        $arr_appPaths = unserialize($GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad']);
+
+        // Path entrys are relative to the root path, this must be changed
+        if (is_array($arr_appPaths)) {
+            foreach ($arr_appPaths as $key => $path) {
+                $arr_appPaths[$key] = $this->projectDir . '/' . $path;
+            }
+        }
 
         $arr_config = [
             'pathForRenderedFiles' => $this->projectDir . '/assets/js',
-            'pathToApp' => $this->projectDir . '/' . $str_appPath,
             'includeCore' => 'no',
             'includeCoreModules' => 'no',
-            'pathToAppCustomization' => ($str_appCustomizationPath ? $this->projectDir . '/' . $str_appCustomizationPath : ''),
+            'pathToAppCustomization' => $arr_appPaths,
             'debug' => ($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '1' : ''),
             'no-minifier' => ($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '1' : ''),
         ];
