@@ -3,8 +3,15 @@
 namespace LeadingSystems\Lsjs4c;
 
 use Contao\Backend;
+use Contao\DataContainer;
+use Contao\System;
+use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Symfony\Component\Finder\Finder;
 
-$GLOBALS['TL_DCA']['tl_layout']['palettes']['default'] .= ';{lsjs4c_legend},lsjs4c_loadLsjs,lsjs4c_appToLoad,lsjs4c_appToLoadTextPath,lsjs4c_appCustomizationToLoad,lsjs4c_appCustomizationToLoadTextPath,lsjs4c_coreCustomizationToLoad,lsjs4c_coreCustomizationToLoadTextPath,myCheckboxField,lsjs4c_debugMode,lsjs4c_noMinifier';
+PaletteManipulator::create()
+    ->addLegend('lsjs4c_legend', 'default', PaletteManipulator::POSITION_APPEND)
+    ->addField(['lsjs4c_loadLsjs', 'lsjs4c_appCustomizationToLoad', 'lsjs4c_appCustomizationToLoadTextPath', 'lsjs4c_coreCustomizationToLoad', 'lsjs4c_coreCustomizationToLoadTextPath', 'myCheckboxField', 'lsjs4c_debugMode', 'lsjs4c_noMinifier'], 'lsjs4c_legend', PaletteManipulator::POSITION_APPEND)
+    ->applyToPalette('default', 'tl_layout');
 
 $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_loadLsjs'] = array
 (
@@ -18,7 +25,7 @@ $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_loadLsjs'] = array
 $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_appCustomizationToLoad'] = [
     'label'            => &$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_appCustomizationToLoad'],
     'inputType'        => 'checkboxWizard',
-    'options_callback' => [tl_layout::class, 'getCheckboxOptions_appCustomizationToLoad'], // Hier die Klasse direkt referenzieren
+    'options_callback' => [tl_layout::class, 'getCheckboxOptions_appCustomizationToLoad'],
     'eval'             => ['multiple' => true, 'sortable' => true],
     'sql'              => "blob NULL"
 ];
@@ -26,7 +33,7 @@ $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_appCustomizationToLoad'] = [
 $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_coreCustomizationToLoad'] = [
     'label'            => &$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_coreCustomizationToLoad'],
     'inputType'        => 'checkboxWizard',
-    'options_callback' => [tl_layout::class, 'getCheckboxOptions_coreCustomizationToLoad'], // Hier die Klasse direkt referenzieren
+    'options_callback' => [tl_layout::class, 'getCheckboxOptions_coreCustomizationToLoad'],
     'eval'             => ['multiple' => true, 'sortable' => true],
     'sql'              => "blob NULL"
 ];
@@ -49,10 +56,6 @@ $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_noMinifier'] = array
     'sql'                     => "char(1) NOT NULL default ''"
 );
 
-
-use Contao\DataContainer;
-use Symfony\Component\Finder\Finder;
-use Contao\System;
 
 class tl_layout extends Backend
 {
