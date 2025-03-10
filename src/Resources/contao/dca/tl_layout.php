@@ -72,13 +72,6 @@ class tl_layout extends Backend
     {
         $arrOptions = [];
 
-
-        // Weitere Optionen kannst du hier hinzufügen, wenn nötig
-        //$arrOptions['option1'] = 'option1'; // Beispiel weitere Optionen
-        //$arrOptions = array_merge($arrOptions, $arrOtherOptions);
-
-
-
         // Root path for searching
         $projectDir = System::getContainer()->getParameter('kernel.project_dir');
         $searchPaths = [
@@ -100,8 +93,7 @@ class tl_layout extends Backend
             }
         }
 
-
-        // Hier den aktuellen Wert aus der Datenbank abrufen
+        // Get the current value from the database here
         $objResult = Database::getInstance()->prepare("SELECT lsjs4c_appCustomization, lsjs4c_coreCustomization FROM tl_layout WHERE id=?")
             ->execute($dc->id);
 
@@ -126,8 +118,6 @@ class tl_layout extends Backend
             }
 
         }
-
-        dump($arrOptions);
 
         return $arrOptions;
     }
