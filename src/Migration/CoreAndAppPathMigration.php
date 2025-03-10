@@ -1,6 +1,6 @@
 <?php
 
-namespace LeadingSystems\MerconisBundle\Migration;
+namespace LeadingSystems\LSJS4CBundle\Migration;
 
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
