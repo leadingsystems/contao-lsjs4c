@@ -4,6 +4,9 @@ namespace LeadingSystems\LSJS4CBundle\Migration;
 
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
+use Contao\FilesModel;
+use Contao\StringUtil;
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 
@@ -22,9 +25,32 @@ class CoreAndAppPathMigration extends AbstractMigration
     public function shouldRun(): bool
     {
         try {
+            $schemaManager = $this->connection->createSchemaManager();
+
+            $tableExist = $schemaManager->tablesExist(['tl_layout']);
+
+            // If the table don't exist don't update
+            if (!$tableExist) {
+                return false;
+            }
+
+            $columns = $schemaManager->listTableColumns('tl_layout');
+
+            // Needs to be checked in lowercase because keys are lowercase
+            $fieldsExist =
+                isset($columns[strtolower('lsjs4c_coreCustomization')]) &&
+                isset($columns[strtolower('lsjs4c_appCustomization')]);
+
+
+            // If the fields don't exist don't update
+            if (!$fieldsExist) {
+                return false;
+            }
+
+
             $queryBuilder = $this->connection->createQueryBuilder();
 
-            // Prüfen, ob in den relevanten Feldern noch Daten vorhanden sind
+            // Check whether there is still data in the relevant fields
             $count = $queryBuilder
                 ->select('COUNT(*)')
                 ->from('tl_layout')
@@ -42,6 +68,29 @@ class CoreAndAppPathMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
+        $schemaManager = $this->connection->createSchemaManager();
+
+        $tableExist = $schemaManager->tablesExist(['tl_layout']);
+
+        // If the table don't exist don't update
+        if (!$tableExist) {
+            return new MigrationResult(false, 'Migration failed: table dont exist');
+        }
+
+        $columns = $schemaManager->listTableColumns('tl_layout');
+
+        // Needs to be checked in lowercase because keys are lowercase
+        $fieldsExist =
+            isset($columns[strtolower('lsjs4c_coreCustomization')]) &&
+            isset($columns[strtolower('lsjs4c_appCustomization')]);
+
+
+        // If the fields don't exist don't update
+        if (!$fieldsExist) {
+            return new MigrationResult(false, 'Migration failed: column dont exist');
+        }
+
+
         try {
             $queryBuilder = $this->connection->createQueryBuilder();
 
@@ -59,12 +108,12 @@ class CoreAndAppPathMigration extends AbstractMigration
                 ->fetchAllAssociative();
 
             foreach ($records as $record) {
-                // Deserialisieren der Array-Felder
-                $coreCustomization = unserialize($record['lsjs4c_coreCustomizationToLoad']) ?: [];
-                $appCustomization = unserialize($record['lsjs4c_appCustomizationToLoad']) ?: [];
-                $appToLoad = unserialize($record['lsjs4c_appToLoad']) ?: [];
 
-                // Addieren der Text-Path-Felder
+                $coreCustomization = $this->convertFileIdToPath($record['lsjs4c_coreCustomizationToLoad']) ?: [];
+                $appCustomization = $this->convertFileIdToPath($record['lsjs4c_appCustomizationToLoad']) ?: [];
+                $appToLoad = $this->convertFileIdToPath($record['lsjs4c_appToLoad']) ?: [];
+
+                // Adding the text path fields
                 if ($record['lsjs4c_coreCustomizationToLoadTextPath']) {
                     $coreCustomization[] = $record['lsjs4c_coreCustomizationToLoadTextPath'];
                 }
@@ -77,11 +126,11 @@ class CoreAndAppPathMigration extends AbstractMigration
                     $appCustomization[] = $record['lsjs4c_appToLoadTextPath'];
                 }
 
-                // Serialisieren der konsolidierten Daten
+
                 $serializedCoreCustomization = serialize($coreCustomization);
                 $serializedAppCustomization = serialize(array_merge($appCustomization, $appToLoad));
 
-                // Update der neuen Felder in der Datenbank und Leeren der alten Felder
+                // Update the new fields in the database and empty the old fields
                 $queryBuilder
                     ->update('tl_layout')
                     ->set('lsjs4c_coreCustomization', ':core')
@@ -103,5 +152,15 @@ class CoreAndAppPathMigration extends AbstractMigration
         } catch (Exception $e) {
             return new MigrationResult(false, 'Migration failed: ' . $e->getMessage());
         }
+    }
+
+
+    private function convertFileIdToPath($id)
+    {
+        $file = FilesModel::findById($id);
+        if ($file) {
+            return ['files/' . preg_replace('(^' . preg_quote(System::getContainer()->getParameter('contao.upload_path')) . '/)', '', $file->path)];
+        }
+        return [];
     }
 }
