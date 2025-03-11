@@ -30,7 +30,6 @@ class LsjsInsertionSubscriber implements EventSubscriberInterface
         if ($this->scopeMatcher->isBackendMainRequest($event) && $this->tokenChecker->hasBackendUser()) {
             require_once($this->projectDir . '/assets/lsjs/core/appBinder/binderController.php');
 
-            //TODO: why is debug and not minifier not set with config options
             $arr_config = [
                 'pathForRenderedFiles' => $this->projectDir . '/assets/js',
                 'includeApp' => 'no',
