@@ -105,7 +105,7 @@ class CoreAndAppPathMigration extends AbstractMigration
 
 
             $serializedCoreCustomization = serialize($coreCustomization);
-            $serializedAppCustomization = serialize(array_merge($appCustomization, $appToLoad));
+            $serializedAppCustomization = serialize(array_merge($appToLoad, $appCustomization));
 
             // Update the new fields in the database and empty the old fields
             $queryBuilder
