@@ -68,90 +68,65 @@ class CoreAndAppPathMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $schemaManager = $this->connection->createSchemaManager();
 
-        $tableExist = $schemaManager->tablesExist(['tl_layout']);
+        $queryBuilder = $this->connection->createQueryBuilder();
 
-        // If the table don't exist don't update
-        if (!$tableExist) {
-            return new MigrationResult(false, 'Migration failed: table dont exist');
-        }
+        // Fetch all records from the table
+        $records = $queryBuilder
+            ->select('id',
+                'lsjs4c_coreCustomizationToLoadTextPath',
+                'lsjs4c_coreCustomizationToLoad',
+                'lsjs4c_appCustomizationToLoadTextPath',
+                'lsjs4c_appCustomizationToLoad',
+                'lsjs4c_appToLoadTextPath',
+                'lsjs4c_appToLoad')
+            ->from('tl_layout')
+            ->executeQuery()
+            ->fetchAllAssociative();
 
-        $columns = $schemaManager->listTableColumns('tl_layout');
+        foreach ($records as $record) {
 
-        // Needs to be checked in lowercase because keys are lowercase
-        $fieldsExist =
-            isset($columns[strtolower('lsjs4c_coreCustomization')]) &&
-            isset($columns[strtolower('lsjs4c_appCustomization')]);
+            $coreCustomization = $this->convertFileIdToPath($record['lsjs4c_coreCustomizationToLoad']) ?: [];
+            $appCustomization = $this->convertFileIdToPath($record['lsjs4c_appCustomizationToLoad']) ?: [];
+            $appToLoad = $this->convertFileIdToPath($record['lsjs4c_appToLoad']) ?: [];
 
-
-        // If the fields don't exist don't update
-        if (!$fieldsExist) {
-            return new MigrationResult(false, 'Migration failed: column dont exist');
-        }
-
-
-        try {
-            $queryBuilder = $this->connection->createQueryBuilder();
-
-            // Fetch all records from the table
-            $records = $queryBuilder
-                ->select('id',
-                    'lsjs4c_coreCustomizationToLoadTextPath',
-                    'lsjs4c_coreCustomizationToLoad',
-                    'lsjs4c_appCustomizationToLoadTextPath',
-                    'lsjs4c_appCustomizationToLoad',
-                    'lsjs4c_appToLoadTextPath',
-                    'lsjs4c_appToLoad')
-                ->from('tl_layout')
-                ->executeQuery()
-                ->fetchAllAssociative();
-
-            foreach ($records as $record) {
-
-                $coreCustomization = $this->convertFileIdToPath($record['lsjs4c_coreCustomizationToLoad']) ?: [];
-                $appCustomization = $this->convertFileIdToPath($record['lsjs4c_appCustomizationToLoad']) ?: [];
-                $appToLoad = $this->convertFileIdToPath($record['lsjs4c_appToLoad']) ?: [];
-
-                // Adding the text path fields
-                if ($record['lsjs4c_coreCustomizationToLoadTextPath']) {
-                    $coreCustomization[] = $record['lsjs4c_coreCustomizationToLoadTextPath'];
-                }
-
-                if ($record['lsjs4c_appCustomizationToLoadTextPath']) {
-                    $appCustomization[] = $record['lsjs4c_appCustomizationToLoadTextPath'];
-                }
-
-                if ($record['lsjs4c_appToLoadTextPath']) {
-                    $appCustomization[] = $record['lsjs4c_appToLoadTextPath'];
-                }
-
-
-                $serializedCoreCustomization = serialize($coreCustomization);
-                $serializedAppCustomization = serialize(array_merge($appCustomization, $appToLoad));
-
-                // Update the new fields in the database and empty the old fields
-                $queryBuilder
-                    ->update('tl_layout')
-                    ->set('lsjs4c_coreCustomization', ':core')
-                    ->set('lsjs4c_appCustomization', ':app')
-                    ->set('lsjs4c_coreCustomizationToLoadTextPath', 'NULL')
-                    ->set('lsjs4c_coreCustomizationToLoad', 'NULL')
-                    ->set('lsjs4c_appCustomizationToLoadTextPath', 'NULL')
-                    ->set('lsjs4c_appCustomizationToLoad', 'NULL')
-                    ->set('lsjs4c_appToLoadTextPath', 'NULL')
-                    ->set('lsjs4c_appToLoad', 'NULL')
-                    ->where('id = :id')
-                    ->setParameter('core', $serializedCoreCustomization)
-                    ->setParameter('app', $serializedAppCustomization)
-                    ->setParameter('id', $record['id'])
-                    ->executeStatement();
+            // Adding the text path fields
+            if ($record['lsjs4c_coreCustomizationToLoadTextPath']) {
+                $coreCustomization[] = $record['lsjs4c_coreCustomizationToLoadTextPath'];
             }
 
-            return new MigrationResult(true, 'Data successfully migrated.');
-        } catch (Exception $e) {
-            return new MigrationResult(false, 'Migration failed: ' . $e->getMessage());
+            if ($record['lsjs4c_appCustomizationToLoadTextPath']) {
+                $appCustomization[] = $record['lsjs4c_appCustomizationToLoadTextPath'];
+            }
+
+            if ($record['lsjs4c_appToLoadTextPath']) {
+                $appCustomization[] = $record['lsjs4c_appToLoadTextPath'];
+            }
+
+
+            $serializedCoreCustomization = serialize($coreCustomization);
+            $serializedAppCustomization = serialize(array_merge($appCustomization, $appToLoad));
+
+            // Update the new fields in the database and empty the old fields
+            $queryBuilder
+                ->update('tl_layout')
+                ->set('lsjs4c_coreCustomization', ':core')
+                ->set('lsjs4c_appCustomization', ':app')
+                ->set('lsjs4c_coreCustomizationToLoadTextPath', 'NULL')
+                ->set('lsjs4c_coreCustomizationToLoad', 'NULL')
+                ->set('lsjs4c_appCustomizationToLoadTextPath', 'NULL')
+                ->set('lsjs4c_appCustomizationToLoad', 'NULL')
+                ->set('lsjs4c_appToLoadTextPath', 'NULL')
+                ->set('lsjs4c_appToLoad', 'NULL')
+                ->where('id = :id')
+                ->setParameter('core', $serializedCoreCustomization)
+                ->setParameter('app', $serializedAppCustomization)
+                ->setParameter('id', $record['id'])
+                ->executeStatement();
         }
+
+        return $this->createResult(true);
+
     }
 
 
