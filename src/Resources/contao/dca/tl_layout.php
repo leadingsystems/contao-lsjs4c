@@ -68,7 +68,7 @@ class tl_layout extends Backend
         return self::getCheckboxOptions($dc, 'lsjs-core*', 'core');
     }
 
-    public function getCheckboxOptions(DataContainer $dc, String $searchname, $type)
+    public function getCheckboxOptions(DataContainer $dc, string $searchname, string $type)
     {
         $arrOptions = [];
 
@@ -111,7 +111,8 @@ class tl_layout extends Backend
             if ($currentValue && is_array($currentValue)) {
                 foreach ($currentValue as $value) {
                     // It the value is already in this array don't add it
-                    if (!in_array($value, $arrOptions)) {
+                    $fullPath = $projectDir . '/' . $value;
+                    if (!in_array($value, $arrOptions) && is_dir($fullPath)) {
                         $arrOptions[$value] = $value;
                     }
                 }
