@@ -24,46 +24,42 @@ class CoreAndAppPathMigration extends AbstractMigration
 
     public function shouldRun(): bool
     {
-        try {
-            $schemaManager = $this->connection->createSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
-            $tableExist = $schemaManager->tablesExist(['tl_layout']);
+        $tableExist = $schemaManager->tablesExist(['tl_layout']);
 
-            // If the table don't exist don't update
-            if (!$tableExist) {
-                return false;
-            }
-
-            $columns = $schemaManager->listTableColumns('tl_layout');
-
-            // Needs to be checked in lowercase because keys are lowercase
-            $fieldsExist =
-                isset($columns[strtolower('lsjs4c_pathsToCoreCustomizations')]) &&
-                isset($columns[strtolower('lsjs4c_pathsToApps')]);
-
-
-            // If the fields don't exist don't update
-            if (!$fieldsExist) {
-                return false;
-            }
-
-
-            $queryBuilder = $this->connection->createQueryBuilder();
-
-            // Check whether there is still data in the relevant fields
-            $count = $queryBuilder
-                ->select('COUNT(*)')
-                ->from('tl_layout')
-                ->where('lsjs4c_coreCustomizationToLoadTextPath IS NOT NULL OR lsjs4c_coreCustomizationToLoad != \'\'')
-                ->orWhere('lsjs4c_appCustomizationToLoadTextPath IS NOT NULL OR lsjs4c_appCustomizationToLoad != \'\'')
-                ->orWhere('lsjs4c_appToLoadTextPath IS NOT NULL OR lsjs4c_appToLoad != \'\'')
-                ->executeQuery()
-                ->fetchOne();
-
-            return $count > 0;
-        } catch (Exception $e) {
+        // If the table don't exist don't update
+        if (!$tableExist) {
             return false;
         }
+
+        $columns = $schemaManager->listTableColumns('tl_layout');
+
+        // Needs to be checked in lowercase because keys are lowercase
+        $fieldsExist =
+            isset($columns[strtolower('lsjs4c_pathsToCoreCustomizations')]) &&
+            isset($columns[strtolower('lsjs4c_pathsToApps')]);
+
+
+        // If the fields don't exist don't update
+        if (!$fieldsExist) {
+            return false;
+        }
+
+
+        $queryBuilder = $this->connection->createQueryBuilder();
+
+        // Check whether there is still data in the relevant fields
+        $count = $queryBuilder
+            ->select('COUNT(*)')
+            ->from('tl_layout')
+            ->where('lsjs4c_coreCustomizationToLoadTextPath IS NOT NULL OR lsjs4c_coreCustomizationToLoad != \'\'')
+            ->orWhere('lsjs4c_appCustomizationToLoadTextPath IS NOT NULL OR lsjs4c_appCustomizationToLoad != \'\'')
+            ->orWhere('lsjs4c_appToLoadTextPath IS NOT NULL OR lsjs4c_appToLoad != \'\'')
+            ->executeQuery()
+            ->fetchOne();
+
+        return $count > 0;
     }
 
     public function run(): MigrationResult
