@@ -35,10 +35,10 @@ class CoreAndAppPathMigration extends AbstractMigration
 
         $columns = $schemaManager->listTableColumns('tl_layout');
 
-        // Needs to be checked in lowercase because keys are lowercase
-        $fieldsExist =
-            isset($columns[strtolower('lsjs4c_pathsToCoreCustomizations')]) &&
-            isset($columns[strtolower('lsjs4c_pathsToApps')]);
+            // Needs to be checked in lowercase because keys are lowercase
+            $fieldsExist =
+                isset($columns[strtolower('lsjs4c_coreCustomization')]) &&
+                isset($columns[strtolower('lsjs4c_appCustomization')]);
 
 
         // If the fields don't exist don't update
@@ -106,8 +106,8 @@ class CoreAndAppPathMigration extends AbstractMigration
             // Update the new fields in the database and empty the old fields
             $queryBuilder
                 ->update('tl_layout')
-                ->set('lsjs4c_pathsToCoreCustomizations', ':core')
-                ->set('lsjs4c_pathsToApps', ':app')
+                ->set('lsjs4c_coreCustomization', ':core')
+                ->set('lsjs4c_appCustomization', ':app')
                 ->set('lsjs4c_coreCustomizationToLoadTextPath', 'NULL')
                 ->set('lsjs4c_coreCustomizationToLoad', 'NULL')
                 ->set('lsjs4c_appCustomizationToLoadTextPath', 'NULL')
