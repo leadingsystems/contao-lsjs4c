@@ -11,7 +11,7 @@ use Contao\Database;
 
 PaletteManipulator::create()
     ->addLegend('lsjs4c_legend', 'default', PaletteManipulator::POSITION_APPEND)
-    ->addField(['lsjs4c_loadLsjs', 'lsjs4c_appCustomization', 'lsjs4c_coreCustomization', 'lsjs4c_debugMode', 'lsjs4c_noMinifier'], 'lsjs4c_legend', PaletteManipulator::POSITION_APPEND)
+    ->addField(['lsjs4c_loadLsjs', 'lsjs4c_appCustomization', 'lsjs4c_coreCustomizations', 'lsjs4c_debugMode', 'lsjs4c_noMinifier'], 'lsjs4c_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('default', 'tl_layout');
 
 $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_loadLsjs'] = array
@@ -31,8 +31,8 @@ $GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_appCustomization'] = [
     'sql'              => "blob NULL"
 ];
 
-$GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_coreCustomization'] = [
-    'label'            => &$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_coreCustomization'],
+$GLOBALS['TL_DCA']['tl_layout']['fields']['lsjs4c_coreCustomizations'] = [
+    'label'            => &$GLOBALS['TL_LANG']['tl_layout']['lsjs4c_coreCustomizations'],
     'inputType'        => 'checkboxWizard',
     'options_callback' => [tl_layout::class, 'getCheckboxOptions_coreCustomization'],
     'eval'             => ['multiple' => true, 'sortable' => true],
@@ -94,7 +94,7 @@ class tl_layout extends Backend
         }
 
         // Get the current value from the database here
-        $objResult = Database::getInstance()->prepare("SELECT lsjs4c_appCustomization, lsjs4c_coreCustomization FROM tl_layout WHERE id=?")
+        $objResult = Database::getInstance()->prepare("SELECT lsjs4c_appCustomization, lsjs4c_coreCustomizations FROM tl_layout WHERE id=?")
             ->execute($dc->id);
 
         if ($objResult->numRows)
@@ -105,7 +105,7 @@ class tl_layout extends Backend
                 $currentValue = unserialize($objResult->lsjs4c_appCustomization);
             }
             if($type == 'core'){
-                $currentValue = unserialize($objResult->lsjs4c_coreCustomization);
+                $currentValue = unserialize($objResult->lsjs4c_coreCustomizations);
             }
 
             if ($currentValue && is_array($currentValue)) {
