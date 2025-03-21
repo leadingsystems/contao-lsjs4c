@@ -37,15 +37,25 @@ class CoreAndAppPathMigration extends AbstractMigration
 
             // Needs to be checked in lowercase because keys are lowercase
             $fieldsExist =
-                isset($columns[strtolower('lsjs4c_coreCustomizations')]) &&
+                isset($columns[strtolower('lsjs4c_appCustomizationsToLoad')]) &&
                 isset($columns[strtolower('lsjs4c_appsToLoad')]);
 
 
         // If the fields don't exist don't update
-        if (!$fieldsExist) {
+        if ($fieldsExist) {
             return false;
         }
 
+        $oldFieldsExist =
+            isset($columns[strtolower('lsjs4c_coreCustomizationToLoadTextPath')]) &&
+            isset($columns[strtolower('lsjs4c_coreCustomizationToLoad')]) &&
+            isset($columns[strtolower('lsjs4c_appCustomizationToLoadTextPath')]) &&
+            isset($columns[strtolower('lsjs4c_appToLoadTextPath')]) &&
+            isset($columns[strtolower('lsjs4c_appToLoad')]);
+
+        if (!$oldFieldsExist) {
+            return false;
+        }
 
         $queryBuilder = $this->connection->createQueryBuilder();
 
@@ -67,6 +77,9 @@ class CoreAndAppPathMigration extends AbstractMigration
 
         $queryBuilder = $this->connection->createQueryBuilder();
 
+        // @toDo creat new DCA Field appsToLoad and coreCustomizations
+
+
         // Fetch all records from the table
         $records = $queryBuilder
             ->select('id',
@@ -79,6 +92,7 @@ class CoreAndAppPathMigration extends AbstractMigration
             ->from('tl_layout')
             ->executeQuery()
             ->fetchAllAssociative();
+
 
         foreach ($records as $record) {
 
@@ -106,7 +120,7 @@ class CoreAndAppPathMigration extends AbstractMigration
             // Update the new fields in the database and empty the old fields
             $queryBuilder
                 ->update('tl_layout')
-                ->set('lsjs4c_coreCustomizations', ':core')
+                ->set('lsjs4c_appCustomizationsToLoad', ':core')
                 ->set('lsjs4c_appsToLoad', ':app')
                 ->set('lsjs4c_coreCustomizationToLoadTextPath', 'NULL')
                 ->set('lsjs4c_coreCustomizationToLoad', 'NULL')
