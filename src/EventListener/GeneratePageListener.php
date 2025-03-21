@@ -23,7 +23,7 @@ class GeneratePageListener
          * Load the lsjs core
          */
 
-        $arr_corePaths = unserialize($GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad']);
+        $arr_corePaths = unserialize($GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationsToLoad']);
 
         // Path entrys are relative to the root path, this must be changed
         if (is_array($arr_corePaths)) {
@@ -38,6 +38,7 @@ class GeneratePageListener
             'pathForRenderedFiles' => $this->projectDir . '/assets/js',
             'includeAppModules' => 'no',
             'includeApp' => 'no',
+            // @toDo rename
             'pathToCoreCustomization' => $arr_corePaths,
             'debug' => ($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '1' : ''),
             'no-minifier' => ($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '1' : ''),
@@ -50,7 +51,7 @@ class GeneratePageListener
          * Load the lsjs apps
          */
 
-        $arr_appPaths = unserialize($GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad']);
+        $arr_appPaths = unserialize($GLOBALS['lsjs4c_globals']['lsjs4c_appsToLoad']);
 
         // Path entrys are relative to the root path, this must be changed
         if (is_array($arr_appPaths)) {
@@ -63,6 +64,7 @@ class GeneratePageListener
             'pathForRenderedFiles' => $this->projectDir . '/assets/js',
             'includeCore' => 'no',
             'includeCoreModules' => 'no',
+            // @toDo rename
             'pathToAppCustomization' => $arr_appPaths,
             'debug' => ($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '1' : ''),
             'no-minifier' => ($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '1' : ''),

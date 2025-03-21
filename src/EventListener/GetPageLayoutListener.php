@@ -12,8 +12,8 @@ class GetPageLayoutListener
     {
         $GLOBALS['lsjs4c_globals']['lsjs4c_loadLsjs'] = $layout->lsjs4c_loadLsjs;
 
-        $GLOBALS['lsjs4c_globals']['lsjs4c_appCustomizationToLoad'] = $layout->lsjs4c_appCustomizationToLoad;
-        $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationToLoad'] = $layout->lsjs4c_coreCustomizationToLoad;
+        $GLOBALS['lsjs4c_globals']['lsjs4c_appsToLoad'] = $layout->lsjs4c_appsToLoad;
+        $GLOBALS['lsjs4c_globals']['lsjs4c_coreCustomizationsToLoad'] = $layout->lsjs4c_coreCustomizationsToLoad;
 
         $GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] = $layout->lsjs4c_debugMode;
 
