@@ -38,7 +38,7 @@ class CoreAndAppPathMigration extends AbstractMigration
             // Needs to be checked in lowercase because keys are lowercase
             $fieldsExist =
                 isset($columns[strtolower('lsjs4c_coreCustomizations')]) &&
-                isset($columns[strtolower('lsjs4c_appCustomization')]);
+                isset($columns[strtolower('lsjs4c_appsToLoad')]);
 
 
         // If the fields don't exist don't update
@@ -107,7 +107,7 @@ class CoreAndAppPathMigration extends AbstractMigration
             $queryBuilder
                 ->update('tl_layout')
                 ->set('lsjs4c_coreCustomizations', ':core')
-                ->set('lsjs4c_appCustomization', ':app')
+                ->set('lsjs4c_appsToLoad', ':app')
                 ->set('lsjs4c_coreCustomizationToLoadTextPath', 'NULL')
                 ->set('lsjs4c_coreCustomizationToLoad', 'NULL')
                 ->set('lsjs4c_appCustomizationToLoadTextPath', 'NULL')
