@@ -38,8 +38,7 @@ class GeneratePageListener
             'pathForRenderedFiles' => $this->projectDir . '/assets/js',
             'includeAppModules' => 'no',
             'includeApp' => 'no',
-            // @toDo rename
-            'pathToCoreCustomization' => $arr_corePaths,
+            'pathsToCoreCustomizations' => $arr_corePaths,
             'debug' => ($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '1' : ''),
             'no-minifier' => ($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '1' : ''),
         ];
@@ -64,8 +63,7 @@ class GeneratePageListener
             'pathForRenderedFiles' => $this->projectDir . '/assets/js',
             'includeCore' => 'no',
             'includeCoreModules' => 'no',
-            // @toDo rename
-            'pathToAppCustomization' => $arr_appPaths,
+            'pathsToApps' => $arr_appPaths,
             'debug' => ($GLOBALS['lsjs4c_globals']['lsjs4c_debugMode'] ? '1' : ''),
             'no-minifier' => ($GLOBALS['lsjs4c_globals']['lsjs4c_noMinifier'] ? '1' : ''),
         ];
