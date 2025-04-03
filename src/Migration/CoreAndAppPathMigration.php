@@ -9,6 +9,7 @@ use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Types\Types;
 
 class CoreAndAppPathMigration extends AbstractMigration
 {
@@ -37,7 +38,7 @@ class CoreAndAppPathMigration extends AbstractMigration
 
             // Needs to be checked in lowercase because keys are lowercase
             $fieldsExist =
-                isset($columns[strtolower('lsjs4c_appCustomizationsToLoad')]) &&
+                isset($columns[strtolower('lsjs4c_coreCustomizationsToLoad')]) &&
                 isset($columns[strtolower('lsjs4c_appsToLoad')]);
 
 
@@ -74,11 +75,19 @@ class CoreAndAppPathMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-
         $queryBuilder = $this->connection->createQueryBuilder();
 
         // @toDo creat new DCA Field appsToLoad and coreCustomizations
-
+        $newFields = [
+            'lsjs4c_coreCustomizationsToLoad' => NULL,
+            'lsjs4c_appsToLoad' => NULL
+        ];
+        $queryBuilder->insert('tl_layout', $newFields,
+            [
+                'lsjs4c_coreCustomizationsToLoad' => Types::BLOB,
+                'lsjs4c_appsToLoad' => Types::BLOB
+            ]
+        );
 
         // Fetch all records from the table
         $records = $queryBuilder
@@ -120,7 +129,7 @@ class CoreAndAppPathMigration extends AbstractMigration
             // Update the new fields in the database and empty the old fields
             $queryBuilder
                 ->update('tl_layout')
-                ->set('lsjs4c_appCustomizationsToLoad', ':core')
+                ->set('lsjs4c_coreCustomizationsToLoad', ':core')
                 ->set('lsjs4c_appsToLoad', ':app')
                 ->set('lsjs4c_coreCustomizationToLoadTextPath', 'NULL')
                 ->set('lsjs4c_coreCustomizationToLoad', 'NULL')
