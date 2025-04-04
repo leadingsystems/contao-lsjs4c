@@ -123,4 +123,3 @@ class tl_layout extends Backend
         return $arrOptions;
     }
 }
-
