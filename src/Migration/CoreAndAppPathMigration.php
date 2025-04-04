@@ -5,11 +5,8 @@ namespace LeadingSystems\LSJS4CBundle\Migration;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\FilesModel;
-use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\Types\Types;
 
 class CoreAndAppPathMigration extends AbstractMigration
 {
@@ -75,19 +72,16 @@ class CoreAndAppPathMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $queryBuilder = $this->connection->createQueryBuilder();
+        $this->connection->executeStatement('
+        ALTER TABLE
+            tl_layout
+        ADD
+            lsjs4c_coreCustomizationsToLoad BLOB DEFAULT NULL,
+        ADD
+            lsjs4c_appsToLoad BLOB DEFAULT NULL
+        ');
 
-        // @toDo creat new DCA Field appsToLoad and coreCustomizations
-        $newFields = [
-            'lsjs4c_coreCustomizationsToLoad' => NULL,
-            'lsjs4c_appsToLoad' => NULL
-        ];
-        $queryBuilder->insert('tl_layout', $newFields,
-            [
-                'lsjs4c_coreCustomizationsToLoad' => Types::BLOB,
-                'lsjs4c_appsToLoad' => Types::BLOB
-            ]
-        );
+        $queryBuilder = $this->connection->createQueryBuilder();
 
         // Fetch all records from the table
         $records = $queryBuilder
@@ -101,7 +95,6 @@ class CoreAndAppPathMigration extends AbstractMigration
             ->from('tl_layout')
             ->executeQuery()
             ->fetchAllAssociative();
-
 
         foreach ($records as $record) {
 
@@ -121,7 +114,6 @@ class CoreAndAppPathMigration extends AbstractMigration
             if ($record['lsjs4c_appToLoadTextPath']) {
                 $appCustomization[] = $record['lsjs4c_appToLoadTextPath'];
             }
-
 
             $serializedCoreCustomization = serialize($coreCustomization);
             $serializedAppCustomization = serialize(array_merge($appToLoad, $appCustomization));
@@ -144,10 +136,26 @@ class CoreAndAppPathMigration extends AbstractMigration
                 ->executeStatement();
         }
 
+        $this->connection->executeStatement('
+        ALTER TABLE
+                tl_layout
+            DROP
+                lsjs4c_coreCustomizationToLoadTextPath,
+            DROP
+                lsjs4c_coreCustomizationToLoad,
+            DROP
+                lsjs4c_appCustomizationToLoadTextPath,
+            DROP
+                lsjs4c_appCustomizationToLoad,
+            DROP
+                lsjs4c_appToLoadTextPath,
+            DROP
+                lsjs4c_appToLoad
+        ');
+
         return $this->createResult(true);
 
     }
-
 
     private function convertFileIdToPath($id)
     {
