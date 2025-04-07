@@ -112,7 +112,7 @@ class CoreAndAppPathMigration extends AbstractMigration
             }
 
             if ($record['lsjs4c_appToLoadTextPath']) {
-                $appCustomization[] = $record['lsjs4c_appToLoadTextPath'];
+                $appToLoad[] = $record['lsjs4c_appToLoadTextPath'];
             }
 
             $serializedCoreCustomization = serialize($coreCustomization);
