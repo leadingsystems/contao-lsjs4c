@@ -110,14 +110,13 @@ class tl_layout extends Backend
 
             if ($currentValue && is_array($currentValue)) {
                 foreach ($currentValue as $value) {
-                    // It the value is already in this array don't add it
+                    // It the value is already in this array don't add it and check whether the path still exists
                     $fullPath = $projectDir . '/' . $value;
                     if (!in_array($value, $arrOptions) && is_dir($fullPath)) {
                         $arrOptions[$value] = $value;
                     }
                 }
             }
-
         }
 
         return $arrOptions;
