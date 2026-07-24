@@ -71,8 +71,8 @@ Das Bundle erweitert `tl_layout` per `PaletteManipulator` um die Legende `lsjs4c
   Layout überhaupt LSJS-Apps zu nutzen.
 - `lsjs4c_appsToLoad` (`checkboxWizard`, `multiple`/`sortable`, `blob`): Auswahl der zu
   ladenden LSJS-App-Verzeichnisse.
-- `lsjs4c_coreCustomizationsToLoad` (`checkboxWizard`, `blob`): Auswahl der zu ladenden
-  Core-Customization-Verzeichnisse.
+- `lsjs4c_coreCustomizationsToLoad` (`checkboxWizard`, `multiple`/`sortable`, `blob`):
+  Auswahl der zu ladenden Core-Customization-Verzeichnisse.
 - `lsjs4c_debugMode` (`checkbox`): Debug-Modus (Template-Pfade im Output sichtbar).
 - `lsjs4c_noMinifier` (`checkbox`): Minifier abschalten.
 
@@ -132,7 +132,8 @@ gespeicherte Pfade, die noch existieren, bleiben in der Auswahl erhalten.
 - `_defaults`: `autowire: true`, `autoconfigure: true`, `public: false`.
 - Explizite Registrierung mit explizit gesetzten, verhaltenskritischen Tags:
   - `GetPageLayoutListener` -- `contao.hook`, `getPageLayout`.
-  - `GeneratePageListener` -- `contao.hook`, `generatePage`.
+  - `GeneratePageListener` -- `contao.hook`, `generatePage`; Argument `%kernel.project_dir%`
+    (Projektwurzel für Binder-Pfade und Kompilat-Ausgabe, siehe Abschnitt 5).
   - `LsjsInsertionSubscriber` -- `kernel.event_subscriber` (Argumente u. a.
     `@contao.framework`, `@contao.routing.scope_matcher`,
     `@contao.security.token_checker`, `%contao.web_dir%`, `%kernel.project_dir%`).
